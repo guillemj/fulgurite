@@ -47,6 +47,8 @@ sub parse_rfc822 ($)
 		# Split the line
 		/^([^:]*): *(.*)$/;
 
+		last if !defined $1;
+
 		my $field = $1;
 		my $content = $2;
 
