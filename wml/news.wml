@@ -15,4 +15,7 @@
 </p></div>
 </define-tag>
 
+<define-tag news-file>
+<include command="scripts/news2wml $(WML_SRC_BASENAME).news" />
+</define-tag>
 
