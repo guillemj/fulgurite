@@ -1,7 +1,7 @@
 #
 # style.plain
 #
-#	$Id: style.plain,v 1.3 2003/03/26 22:36:02 guillem Exp $
+#	$Id: style.plain,v 1.4 2003/03/30 15:42:37 guillem Exp $
 #
 #	Convert HTMS to Std HTML with plain style
 #
@@ -13,25 +13,25 @@
 # (at your option) any later version.
 #
 
-s%<generator-meta>%<meta name="Generator" content="htms2html plain style $Revision: 1.3 $" />%
+s%<generator-meta>%<meta name="Generator" content="htms2html plain style $Revision: 1.4 $" />%
 
 s%<body body-style>%<body>%
 
 s%<page-style>%%
 s%<page-contents>%<!-- Page Contents -->%
 s%</page-contents>%%
-s%<page-separator>%<hr size="2" width="100\%" />%
-s%<page-footer>%<!-- Page Footer --><span>%
-s%</page-footer>%</span>%
-    
-s%<page-index>%<!-- Page Index -->[ \| %
-s%</page-index>% ] <hr size="2" width="100\%" />%
+s%<page-separator>%<hr />%
+s%<page-footer>%<!-- Page Footer --><p>%
+s%</page-footer>%</p>%
+
+s%<page-index>%<!-- Page Index --><div>[ \| %
+s%</page-index>% ]</div> <hr />%
 s%<index-entry %<a %
 s%</index-entry>%</a> \| %
 s%<index-separator>% ]<br />[ \| %
 
-s%<changelog>%<!-- ChangeLog Section --><dl>%
-s%</changelog>%</dl>%
+s%<changelog>%<!-- ChangeLog Section --><div><dl>%
+s%</changelog>%</dl></div>%
 s%<changelog-title>%<dt><strong>%
 s%</changelog-title>%</strong></dt>%
 s%<changelog-entry>%<dd>%
