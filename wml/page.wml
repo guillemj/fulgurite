@@ -1,6 +1,6 @@
 <define-tag page-contents endtag=required>
   <!-- Page Contents -->
-  <div class="contingut">
+  <div class="content">
     %body
   </div>
 </define-tag>
