@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir builddir
 #
-# $Id: patch2htms,v 1.6 2003/04/23 19:14:38 guillem Exp $
+# $Id: patch2htms,v 1.7 2003/05/19 23:59:54 guillem Exp $
 #
 #	generates an htms file from a list of patches in rfc822 format
 #
@@ -56,6 +56,12 @@ parse_rfc822 ()
 		# Don't show Author
 		if [ "$field" = "Author" ]; then continue; fi
 
+		if [ "$field" = "Status" ]
+		then
+			field_status=$(echo $content | tr '[:upper:] ' '[:lower:]-')
+			echo $field_status >&2
+		fi
+
 		if [ "${line:0:1}" == " " ]
 		then
 			if [ $prev_entry = "field" ]
@@ -85,8 +91,10 @@ generate_body ()
 {
 	for f in `find $PATCHDIR -name '*.patch'`
 	do
-		echo $f
-		parse_rfc822 $f >> patches.body.htms
+		parse_rfc822 $f > patches.entry.htms 2> patches.status
+		Status=$(cat patches.status)
+		echo $f: $Status
+		cat patches.entry.htms >> patches.body$Status.htms
 	done
 }
 
@@ -100,32 +108,45 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.6 $ ">
+	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.7 $ ">
 	  <common-style>
 	</head>
 	<body>
 	  <page-index>
 	    <index-entry href="./">Home</index-entry>
-	<!-- Commented out as now there is no such code to do this
+	
 	    <index-separator>
 
 	    <index-entry href="#not-applied">Not Applied</index-entry>
 	    <index-entry href="#applied">Applied</index-entry>
 	    <index-entry href="#fixed">Fixed</index-entry>
-	-->
 	  </page-index>
 	
 	  <page-contents>
 	    <h1>Patches List</h1>
 	
-	    <p>
-	    All patches here are not applied yet. Patches applied will be
-	    removed.
-	    </p>
-	
 	HEADER
 
-	cat patches.body.htms >> patches.htms
+	for Status in not-applied applied fixed
+	do
+		if [ -e patches.body-$Status.htms ]
+		then
+			Status_Note=$(echo $Status | tr '-' ' ')
+			cat >> patches.htms <<-SECTION
+			    <h2><a id="$Status">Patches $Status_Note</a></h2>
+			SECTION
+			cat patches.body-$Status.htms >> patches.htms
+		fi
+	done
+
+	if [ -e patches.body.htms ]
+	then
+		cat >> patches.htms <<-SECTION
+		    <hr>
+		    <h2><a id="unkwnown">Patches unkwnown status</a></h2>
+		SECTION
+		cat patches.body.htms >> patches.htms
+	fi
 
 	cat >> patches.htms <<-FOOTER
 	  </page-contents>
@@ -150,7 +171,7 @@ cd $BUILDDIR
 generate_body
 generate_htms
 
-rm patches.body.htms
+rm -f patches.body* patches.entry* patches.status
 
 exit 0
 
