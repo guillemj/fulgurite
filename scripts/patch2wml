@@ -45,7 +45,7 @@ sub parse_rfc822 ($$)
 		last if !length;
 
 		# Split the line
-		/^([^:]*): *(.*)$/;
+		/^([^: ]*): *(.*)$/;
 
 		last if !defined $1;
 
