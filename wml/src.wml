@@ -2,6 +2,10 @@
 <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>
 </define-tag>
 
+<define-tag url_NASM>
+<a href="http://nasm.2y.net/">NASM</a>
+</define-tag>
+
 <define-tag download>
 <a href="%0">%0</a>
 </define-tag>
