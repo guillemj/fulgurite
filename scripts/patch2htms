@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.14 2003/10/07 05:24:47 guillem Exp $
+# $Id: patch2htms,v 1.15 2003/11/11 05:17:53 guillem Exp $
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -62,11 +62,13 @@ parse_rfc822 ()
 		shift
 		content="$@"
 
+		IFS=$REAL_IFS
 		# Don't show excluded fields
 		for excluded in $FIELDS_EXCLUDED
 		do
 			if [ "$field" = "$excluded" ]; then continue; fi
 		done
+		IFS=
 
 		if [ "$field" = "Status" ]
 		then
@@ -123,7 +125,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="patch2htms \$Revision: 1.14 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.15 $ ">
 	  <common-style>
 	</head>
 	<body>
