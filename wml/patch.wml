@@ -1,0 +1,10 @@
+<define-tag patch-title endtag=required>
+<h3><a %attributes>%body</a></h3>
+</define-tag>
+
+<define-tag patch-description endtag=required>
+  <div><ul>
+    %body
+  </ul></div>
+</define-tag>
+

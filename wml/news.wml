@@ -1,0 +1,18 @@
+<define-tag news endtag=required>
+<!-- News Section -->
+  %body
+</define-tag>
+
+<define-tag news-title endtag=required>
+<span class="news-title"><strong>
+  %body
+</strong></span>
+</define-tag>
+
+<define-tag news-entry endtag=required>
+<div class="news"><p>
+  %body
+</p></div>
+</define-tag>
+
+

@@ -1,0 +1,44 @@
+<define-tag page-contents endtag=required>
+  <!-- Page Contents -->
+  <div class="contingut">
+    %body
+  </div>
+</define-tag>
+
+<define-tag page-separator>
+  <hr />
+</define-tag>
+
+<define-tag page-logo>
+  <div class="logo">
+    <a href="/index"><img src="/logo.png" class="logo" alt="Inici" /></a>
+  </div>
+</define-tag>
+
+<define-tag page-valid>
+  <p>
+    <a href="http://validator.w3.org/check/referer">
+      <img src="http://www.w3.org/Icons/valid-xhtml11"
+	   alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    <a href="http://jigsaw.w3.org/css-validator/">
+      <img style="border:0;width:88px;height:31px"
+	   src="http://jigsaw.w3.org/css-validator/images/vcss"
+	   alt="Valid CSS!" /></a>
+  </p>
+</define-tag>
+
+<define-tag page-footer endtag=required>
+  <!-- Page Footer -->
+  <div class="footer">
+    <page-valid>
+    %body
+  </div>
+</define-tag>
+
+<define-tag page-title endtag=required>
+  <!-- Page Title -->
+  <div class="title">
+    %body
+  </div>
+</define-tag>
+

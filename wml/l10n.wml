@@ -1,0 +1,22 @@
+<:
+my %langs_map = (
+  ca => { Language => 'Catalan',
+	  Charset  => 'iso-8859-15',
+	},
+  es => { Language => 'Spanish',
+	  Charset  => 'iso-8859-15',
+	},
+  en => { Language => 'English',
+	  Charset  => 'iso-8859-1',
+	},
+);
+
+my $LANGUAGE;
+my $CHARSET;
+
+if (defined(my $conf = $langs_map{$LANG})) {
+  $LANGUAGE = $conf->{'Language'};
+  $CHARSET = $conf->{'Charset'};
+}
+:>
+

@@ -1,0 +1,23 @@
+<define-tag page-dir-toc></define-tag>
+
+<define-tag page-index endtag=reqired>
+<!-- Page Index -->
+<div class="menu">
+  %body
+</div>
+</define-tag>
+
+<define-tag index-section endtag=reqired>
+<p>%body</p>
+</define-tag>
+
+<define-tag index-title endtag=reqired>
+<span class="menu-title"><a %attributes>%body</a></span>
+</define-tag>
+
+<define-tag index-entry endtag=reqired>
+<a %attributes>%body</a>
+</define-tag>
+
+<define-tag index-separator></define-tag>
+
