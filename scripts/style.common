@@ -1,7 +1,7 @@
 #
 # style.common
 #
-#	$Id: style.common,v 1.5 2003/03/30 15:42:37 guillem Exp $
+#	$Id: style.common,v 1.6 2003/04/18 04:54:29 guillem Exp $
 #
 #	Convert HTMS to Std HTML with common style
 #
@@ -17,7 +17,7 @@ s%<sgml-doctype>%<?xml version="1.0" encoding="ISO-8859-1"?>\
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"\
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">%
 
-s%<html %<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" %
+s%<html%<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"%
 
 s%<content-meta>%<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\
   <meta http-equiv="Content-Language" content="en-us" />%
