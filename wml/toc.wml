@@ -4,12 +4,12 @@
 <define-tag toc endtag=required>
 {#toc#:
 <!-- TOC Index -->
-<div class="menu">
+<div class="toc">
   [ |
   %body
   ]
-  <hr />
 </div>
+<hr />
 :##}
 </define-tag>
 
@@ -18,7 +18,7 @@
 </define-tag>
 
 <define-tag toc-title endtag=required>
-<span class="menu-title"><a <attributes-quote %attributes />>%body</a></span>
+<span class="toc-title"><a <attributes-quote %attributes />>%body</a></span>
 </define-tag>
 
 <define-tag toc-entry endtag=required>
