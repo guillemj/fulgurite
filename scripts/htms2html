@@ -2,7 +2,7 @@
 #
 # htms2html
 #
-#	$Id: htms2html,v 1.3 2003/10/07 05:01:15 guillem Exp $
+#	$Id$
 #
 #	Convert HTMS to Std HTML
 #
@@ -40,7 +40,7 @@ else
 fi
 
 # Insert ChangeLog if it exists
-changelog_file=$(basename $input .htms).ChangeLog
+changelog_file=$(basename $input .htms).news
 
 (
 if [ -f $changelog_file ]; then
