@@ -1,7 +1,7 @@
 #
 # style.common
 #
-#	$Id: style.common,v 1.6 2003/04/18 04:54:29 guillem Exp $
+#	$Id$
 #
 #	Convert HTMS to Std HTML with common style
 #
@@ -26,4 +26,4 @@ s%<common-meta>%<link rev="made" href="mailto:guillem@hadrons.org" />\
   <meta name="Author" content="Guillem Jover" />\
   <generator-meta>%
 
-s%<common-style>%<link rel="stylesheet" type="text/css" href="style/hedrons.css" />%
+s%<common-style>%<link rel="stylesheet" type="text/css" href="style/hadrons.css" />%
