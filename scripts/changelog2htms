@@ -2,7 +2,7 @@
 #
 # changelog2htms
 #
-#	$Id: changelog2htms,v 1.2 2003/02/06 04:23:20 guillem Exp $
+#	$Id: changelog2htms,v 1.3 2003/03/26 22:29:49 guillem Exp $
 #
 #	Convert a ChangeLog to a HTMS snippet
 #
@@ -39,7 +39,7 @@ BEGIN {
 }
 
 /\.$/ {
-	print $0, "<br>"
+	print $0, "<br />"
 	next
 }
 
