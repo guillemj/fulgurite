@@ -62,6 +62,10 @@ sub parse_rfc822 ($$)
 				($status = $content) =~ tr/- A-Z/__a-z/;
 			}
 
+			if ($field eq "Debbug") {
+				$content = "<debbug $content>";
+			}
+
 			print "</li>\n" if ($prev_field ne "empty");
 			print "      <li><strong>$field: $content</strong>";
 
