@@ -24,18 +24,6 @@ my $patchdir = $ARGV[0];
 my @status_list = ("not_applied", "applied", "fixed", "unknown");
 
 foreach (@status_list) {
-  my $status_note = $_;
-
-  $status_note =~ tr/_/ /;
-
-  print "{#patch_toc#:<toc-entry href=\"#$_\">$status_note</toc-entry>:##}\n";
-  print "{#patch_list#:\n";
-  print "<div class=\"patches_$_\">\n";
-  print "  <h2 id=\"$_\">Patches $status_note</h2>\n";
-  print "  {#patch_list_$_#}\n";
-  print "</div>\n";
-  print "<hr />\n";
-  print ":##}\n";
   print "<set-var n_$_=0 />\n";
 }
 
@@ -56,6 +44,16 @@ foreach (@status_list) {
   my $status_note = $_;
 
   $status_note =~ tr/_/ /;
+
+  print "{#patch_toc#:<toc-entry href=\"#$_\">$status_note</toc-entry>:##}\n";
+
+  print "{#patch_list#:\n";
+  print "<div class=\"patches_$_\">\n";
+  print "  <h2 id=\"$_\">Patches $status_note</h2>\n";
+  print "  {#patch_list_$_#}\n";
+  print "</div>\n";
+  print "<hr />\n";
+  print ":##}\n";
 
   print "{#patch_summary#:\n";
   print "  <li>$status_note patches (<get-var n_$_ />)</li>\n";
