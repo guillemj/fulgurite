@@ -2,11 +2,11 @@
 #
 # htms2html
 #
-#	$Id: htms2html,v 1.1 2003/01/03 07:41:55 guillem Exp $
+#	$Id: htms2html,v 1.2 2003/02/06 04:40:37 guillem Exp $
 #
 #	Convert HTMS to Std HTML
 #
-# Copyright (C) 2001, 2002 Guillem Jover <guillem.jover@menta.net>
+# Copyright (C) 2001-2003 Guillem Jover <guillem.jover@menta.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,9 +14,15 @@
 # (at your option) any later version.
 #
 
+error ()
+{
+	echo "htms2html: $2" >&2
+	exit $1
+}
+
 input=$1
 
-[ -f "$input" ] || (echo "htms2html: input file does not exist" > /dev/stderr; exit 1)
+[ -f "$input" ] || error 1 "input file does not exist"
 
 BIN_DIR=$(dirname $0)
 STYLE_DIR=$BIN_DIR
@@ -29,8 +35,7 @@ if [ -z "$STYLE" ]; then
 else
 	echo $STYLE_LIST | grep $STYLE > /dev/null 2>&1
 	if [ $? != 0 ]; then
-		echo "htms2html: specified style is not available" > /dev/stderr
-		exit 2
+		error 2 "specified style is not available"
 	fi
 fi
 
