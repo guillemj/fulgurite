@@ -2,11 +2,11 @@
 #
 # htms2html
 #
-#	$Id: htms2html,v 1.2 2003/02/06 04:40:37 guillem Exp $
+#	$Id: htms2html,v 1.3 2003/10/07 05:01:15 guillem Exp $
 #
 #	Convert HTMS to Std HTML
 #
-# Copyright (C) 2001-2003 Guillem Jover <guillem.jover@menta.net>
+# Copyright (C) 2001-2003 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
