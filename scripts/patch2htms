@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.12 2003/10/07 02:31:41 guillem Exp $
+# $Id: patch2htms,v 1.13 2003/10/07 04:59:59 guillem Exp $
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -41,7 +41,6 @@ parse_rfc822 ()
 	echo "    <patch-title href=\"$filename\">$title</patch-title>"
 	echo "    <patch-description>"
 
-	IFS=""
 	prev_entry=empty
 	cat $filename | while read line
 	do
@@ -62,14 +61,14 @@ parse_rfc822 ()
 		content="$@"
 
 		# Don't show excluded fields
-		for excluded in "$FIELDS_EXCLUDED"
+		for excluded in $FIELDS_EXCLUDED
 		do
 			if [ "$field" = "$excluded" ]; then continue; fi
 		done
 
 		if [ "$field" = "Status" ]
 		then
-			field_status=$(echo $content | \
+			field_status=$(echo "$content" | \
 			               tr '[:upper:] ' '[:lower:]-')
 			echo $field_status >&2
 		fi
@@ -102,7 +101,7 @@ parse_rfc822 ()
 
 generate_body ()
 {
-	for f in `find $PATCHDIR -name '*.patch'`
+	for f in `find $PATCHDIR -name '*.patch' | sed -e 's/^\.\///'`
 	do
 		parse_rfc822 $f > $BASENAME.entry.htms 2> $BASENAME.status
 		Status=$(cat $BASENAME.status)
@@ -121,7 +120,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="patch2htms \$Revision: 1.12 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.13 $ ">
 	  <common-style>
 	</head>
 	<body>
@@ -129,9 +128,10 @@ generate_htms ()
 	    <index-entry href="./">Home</index-entry>
 	
 	    <index-separator>
+	
 	HEADER
 
-	for Status in "$STATUS_LIST"
+	for Status in $STATUS_LIST
 	do
 		Status_Note=$(echo $Status | tr '-' ' ')
 		cat >> $BASENAME.htms <<-HEADER
@@ -147,7 +147,7 @@ generate_htms ()
 	
 	HEADER
 
-	for Status in "$STATUS_LIST"
+	for Status in $STATUS_LIST
 	do
 		if [ -e $BASENAME.body-$Status.htms ]
 		then
@@ -185,6 +185,11 @@ generate_htms ()
 #
 # Main program
 #
+
+if [ "$PATCHDIR" = "$BUILDDIR" ]
+then
+	PATCHDIR="."
+fi
 
 cd $BUILDDIR
 
