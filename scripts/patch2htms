@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.15 2003/11/11 05:17:53 guillem Exp $
+# $Id: patch2htms,v 1.16 2003/11/11 19:01:53 guillem Exp $
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -125,12 +125,12 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="patch2htms \$Revision: 1.15 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.16 $ ">
 	  <common-style>
 	</head>
 	<body>
 	  <page-index>
-	    <index-entry href="./">Home</index-entry>
+	    <index-entry href="../">Home</index-entry>
 	
 	    <index-separator>
 	
