@@ -13,12 +13,12 @@
 
   <!-- Page Footer -->
   <div class="footer">
+    {#page_footer#}
     <page-valid>
     {#scm_id#}
     <div class="copyright">
       Copyright &copy; 2001, 2002, 2003, 2004  $(webmaster_name)
     </div>
-    {#page_footer#}
   </div>
 
 #use wml::footer
