@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir builddir
 #
-# $Id: patch2htms,v 1.5 2003/04/23 19:03:13 guillem Exp $
+# $Id: patch2htms,v 1.6 2003/04/23 19:14:38 guillem Exp $
 #
 #	generates an htms file from a list of patches in rfc822 format
 #
@@ -43,8 +43,18 @@ parse_rfc822 ()
 		# End of RFC822 header data
 		if [ ${#line} -eq 0 ]; then break; fi
 
+		# Split the line
+		OLD_IFS=$IFS
+		IFS=":"
+		set -- $line
+		IFS=$OLD_IFS
+
+		field="$1"
+		shift
+		content="$@"
+
 		# Don't show Author
-#		if expr $line : "Author" > ; then break; fi
+		if [ "$field" = "Author" ]; then continue; fi
 
 		if [ "${line:0:1}" == " " ]
 		then
@@ -57,7 +67,7 @@ parse_rfc822 ()
 			echo "      $entry"
 			prev_entry=description
 		else
-			entry="$(echo "$line"|sed -e 's%^%<b>%; s%^[^:]*%&</b>%')"
+			entry="<b>$field: $content</b>"
 			if [ $prev_entry != "empty" ]; then
 				echo "</li>"
 			fi
@@ -90,7 +100,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.5 $ ">
+	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.6 $ ">
 	  <common-style>
 	</head>
 	<body>
