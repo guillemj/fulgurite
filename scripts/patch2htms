@@ -2,7 +2,7 @@
 #
 # patch2htms language directory
 #
-# $Id: patch2htms,v 1.3 2003/04/23 18:29:42 guillem Exp $
+# $Id: patch2htms,v 1.4 2003/04/23 18:49:49 guillem Exp $
 #
 #	generates an htms file from a list of patches in rfc822 format
 #
@@ -28,7 +28,7 @@ iso-date ()
 parse_rfc822 ()
 {
 	filename=$1
-	title="$(echo $filename|sed -e 's/_/ /g; s/\.patch$//')"
+	title="$filename"
 
 	echo "    <patch-title href=\"$filename\">$title</patch-title>"
 	echo "    <patch-description>"
@@ -90,12 +90,19 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.3 $ ">
+	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.4 $ ">
 	  <common-style>
 	</head>
 	<body>
 	  <page-index>
 	    <index-entry href="./">Home</index-entry>
+	<!-- Commented out as now there is no such code to do this
+	    <index-separator>
+
+	    <index-entry href="#not-applied">Not Applied</index-entry>
+	    <index-entry href="#applied">Applied</index-entry>
+	    <index-entry href="#fixed">Fixed</index-entry>
+	-->
 	  </page-index>
 	
 	  <page-contents>
