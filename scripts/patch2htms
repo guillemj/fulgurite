@@ -1,12 +1,14 @@
 #!/bin/bash
 #
-# patch2htms patchdir builddir
+# patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.10 2003/09/20 22:48:32 guillem Exp $
+# $Id: patch2htms,v 1.11 2003/10/07 02:14:19 guillem Exp $
 #
-#	generates an htms file from a list of patches in rfc822 format,
+#	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
 #	is the dir from where the relative paths to patches is taken.
+#	The only restriction is that patchdir should be a subdirectory of
+#	builddir.
 #
 # Copyright (C) 2003 Guillem Jover <guillem@hadrons.org>
 #
@@ -19,9 +21,11 @@
 PROGRAM=patch2htms
 
 SCRIPTDIR=$(dirname $0)
-BASENAME=${1:-patches}
-PATCHDIR=$(readlink -f $2)
-BUILDDIR=$(readlink -f ${3:-$(pwd)})
+PATCHDIR=$1
+BUILDDIR=${2:-$PATCHDIR}
+BASENAME=${3:-patches}
+
+FIELDS_EXCLUDED="Author"
 
 iso-date ()
 {
@@ -56,8 +60,11 @@ parse_rfc822 ()
 		shift
 		content="$@"
 
-		# Don't show Author
-		if [ "$field" = "Author" ]; then continue; fi
+		# Don't show excluded fields
+		for excluded in "$FIELDS_EXCLUDED"
+		do
+			if [ "$field" = "$excluded" ]; then continue; fi
+		done
 
 		if [ "$field" = "Status" ]
 		then
@@ -92,19 +99,18 @@ parse_rfc822 ()
 
 generate_body ()
 {
-	# XXX: Nasty Hack fix ASAP
-	for f in `find $BASENAME/ -name '*.patch'`
+	for f in `find $PATCHDIR -name '*.patch'`
 	do
-		parse_rfc822 $f > $BUILDDIR/$BASENAME.entry.htms 2> $BUILDDIR/$BASENAME.status
-		Status=$(cat $BUILDDIR/$BASENAME.status)
+		parse_rfc822 $f > $BASENAME.entry.htms 2> $BASENAME.status
+		Status=$(cat $BASENAME.status)
 		echo $f: $Status
-		cat $BUILDDIR/$BASENAME.entry.htms >> $BUILDDIR/$BASENAME.body$Status.htms
+		cat $BASENAME.entry.htms >> $BASENAME.body$Status.htms
 	done
 }
 
 generate_htms ()
 {
-	cat > $BUILDDIR/$BASENAME.htms <<-HEADER
+	cat > $BASENAME.htms <<-HEADER
 	<sgml-doctype>
 	<html>
 	<head>
@@ -112,7 +118,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.10 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.11 $ ">
 	  <common-style>
 	</head>
 	<body>
@@ -133,26 +139,26 @@ generate_htms ()
 
 	for Status in not-applied applied fixed
 	do
-		if [ -e $BUILDDIR/$BASENAME.body-$Status.htms ]
+		if [ -e $BASENAME.body-$Status.htms ]
 		then
 			Status_Note=$(echo $Status | tr '-' ' ')
-			cat >> $BUILDDIR/$BASENAME.htms <<-SECTION
+			cat >> $BASENAME.htms <<-SECTION
 			    <h2><a id="$Status">Patches $Status_Note</a></h2>
 			SECTION
-			cat $BUILDDIR/$BASENAME.body-$Status.htms >> $BUILDDIR/$BASENAME.htms
+			cat $BASENAME.body-$Status.htms >> $BASENAME.htms
 		fi
 	done
 
-	if [ -e $BUILDDIR/$BASENAME.body.htms ]
+	if [ -e $BASENAME.body.htms ]
 	then
-		cat >> $BUILDDIR/$BASENAME.htms <<-SECTION
+		cat >> $BASENAME.htms <<-SECTION
 		    <hr>
 		    <h2><a id="unkwnown">Patches unkwnown status</a></h2>
 		SECTION
-		cat $BUILDDIR/$BASENAME.body.htms >> $BUILDDIR/$BASENAME.htms
+		cat $BASENAME.body.htms >> $BASENAME.htms
 	fi
 
-	cat >> $BUILDDIR/$BASENAME.htms <<-FOOTER
+	cat >> $BASENAME.htms <<-FOOTER
 	  </page-contents>
 	
 	  <page-separator>
@@ -170,10 +176,11 @@ generate_htms ()
 # Main program
 #
 
+cd $BUILDDIR
+
 generate_body
 generate_htms
 
-cd $BUILDDIR
 rm -f $BASENAME.body* $BASENAME.entry* $BASENAME.status
 
 exit 0
