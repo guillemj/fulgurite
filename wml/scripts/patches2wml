@@ -21,7 +21,7 @@
 use warnings;
 use strict;
 
-my $scriptdir = "~/web/scripts";
+my $scriptdir = "~/web/wml/scripts";
 my $patchdir = $ARGV[0];
 
 my @status_list = ("not_applied", "applied", "fixed", "unknown");
