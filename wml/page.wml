@@ -14,7 +14,7 @@
 
 <define-tag page-logo>
   <div class="logo">
-    <a href="/index"><img src="/logo.png" class="logo" alt="Inici" /></a>
+    <a href="/index"><img src="/logo.png" class="logo" alt="Home" /></a>
   </div>
 </define-tag>
 
