@@ -4,15 +4,21 @@
 </define-tag>
 
 <define-tag news-title endtag=required>
-<span class="news-title"><strong>
+  <span class="news-title"><strong>
+    %body
+  </strong></span>
+</define-tag>
+
+<define-tag news-body endtag=required>
+<p>
   %body
-</strong></span>
+</p>
 </define-tag>
 
 <define-tag news-entry endtag=required>
-<div class="news"><p>
+<div class="news">
   %body
-</p></div>
+</div>
 </define-tag>
 
 <define-tag news-file>

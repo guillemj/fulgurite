@@ -41,12 +41,16 @@ while (<INFILE>) {
 	} else {
 	    $recent++;
 	}
-	print '</news-entry>' if ($entry);
-	print '<news-title>';
-	print;
-	print '</news-title>';
+	if ($entry) {
+	    print '</news-body>';
+	    print '</news-entry>';
+	}
 	print '<news-entry>';
 	$entry = 1;
+	print '  <news-title>';
+	print;
+	print '  </news-title>';
+	print '  <news-body>';
 	next;
     }
 
