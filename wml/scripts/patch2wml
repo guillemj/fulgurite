@@ -81,6 +81,7 @@ sub parse_rfc822 ($$)
 	print "\n";
 	print ":##}\n";
 
+	print "<increment n_$status />\n";
 	print "{#patch_list_$status#:\n";
 	print "  {#patch_$patchname#}\n";
 	print ":##}\n";

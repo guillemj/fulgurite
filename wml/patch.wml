@@ -2,6 +2,12 @@
   {#patch_toc#}
 </define-tag>
 
+<define-tag patch-summary>
+  <ul class="patch-summary">
+    {#patch_summary#}
+  </ul>
+</define-tag>
+
 <define-tag patch-list>
   {#patch_list#}
 </define-tag>

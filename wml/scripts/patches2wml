@@ -36,6 +36,7 @@ foreach (@status_list) {
   print "</div>\n";
   print "<hr />\n";
   print ":##}\n";
+  print "<set-var n_$_=0 />\n";
 }
 
 open CMD, "find $patchdir/ -name '*.patch' | sort |";
@@ -50,4 +51,14 @@ while (<CMD>) {
   system "$scriptdir/patch2wml '$patch' '$title'";
 }
 close CMD;
+
+foreach (@status_list) {
+  my $status_note = $_;
+
+  $status_note =~ tr/_/ /;
+
+  print "{#patch_summary#:\n";
+  print "  <li>$status_note patches (<get-var n_$_ />)</li>\n";
+  print ":##}\n";
+}
 
