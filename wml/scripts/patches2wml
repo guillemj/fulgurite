@@ -4,11 +4,8 @@
 #
 # $Id$
 #
-#	Generates a wml file from a list of patches in rfc822 format,
-#	uses builddir to output all temp files and the result, and patchdir
-#	is the dir from where the relative paths to patches is taken.
-#	The only restriction is that patchdir should be a subdirectory of
-#	builddir.
+#	Generates a wml list of patches in rfc822 format from patchdir.
+#	The patch title is the patch filename with the patchdir stripped.
 #
 # Copyright (C) 2003, 2004 Guillem Jover <guillem@hadrons.org>
 #
@@ -32,10 +29,12 @@ foreach (@status_list) {
   $status_note =~ tr/_/ /;
 
   print "{#patch_toc#:<toc-entry href=\"#$_\">$status_note</toc-entry>:##}\n";
-  print "{#patch_list#:{#patch_list_$_#}:##}\n";
-  print "{#patch_list_$_#:\n";
+  print "{#patch_list#:\n";
+  print "<div class=\"patches_$_\">\n";
+  print "  <h2><a id=\"$_\">Patches $status_note</a></h2>\n";
+  print "  {#patch_list_$_#}\n";
+  print "</div>\n";
   print "<hr />\n";
-  print "<h2><a id=\"$_\">Patches $status_note</a></h2>\n";
   print ":##}\n";
 }
 

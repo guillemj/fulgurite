@@ -29,10 +29,11 @@ sub parse_rfc822 ($$)
 	my $status = "unknown";
 
 	print "{#patch_$patchname#:\n";
+	print "  <patch>\n";
 	print "    <patch-title href=\"$filename\">$title</patch-title>\n";
 	print "    <patch-description>\n";
 
-	my $prev_entry = "empty";
+	my $prev_field = "empty";
 
 	open(INFILE, $filename) or die "Cannot open $filename: $!";
 
@@ -44,35 +45,31 @@ sub parse_rfc822 ($$)
 		# End of RFC822 header data
 		last if !length;
 
-		# Split the line
-		/^([^: ]*): *(.*)$/;
-
-		last if !defined $1;
-
-		my $field = $1;
-		my $content = $2;
-
-		if (/^ /) {
-			print " <br />\n" if ($prev_entry eq "field");
-
+		if ($prev_field eq "Description" and /^ /) {
 			s/^ \./<br \/>/;
 			s/([.:])$/$1<br \/>/;
 			print $_, "\n";
-			$prev_entry = "description";
-		} else {
+		} elsif (/^([^: ]*): *(.*)$/) { # Split the line
+			my $field = $1;
+			my $content = $2;
+
 			# Don't show excluded fields
 			foreach my $excluded (@excluded_fields) {
 				next line if ($field eq $excluded);
 			}
 
 			if ($field eq "Status") {
-				$status = $content;
-				$status =~ tr/- A-Z/__a-z/;
+				($status = $content) =~ tr/- A-Z/__a-z/;
 			}
 
-			print "</li>\n" if ($prev_entry ne "empty");
+			print "</li>\n" if ($prev_field ne "empty");
 			print "      <li><strong>$field: $content</strong>";
-			$prev_entry = "field";
+
+			print " <br />\n" if ($field eq "Description");
+
+			$prev_field = $field;
+		} else {
+			last if !defined $1;
 		}
 	}
 
@@ -80,6 +77,7 @@ sub parse_rfc822 ($$)
 
 	print "      </li>\n";
 	print "    </patch-description>\n";
+	print "  </patch>\n";
 	print "\n";
 	print ":##}\n";
 

@@ -6,12 +6,18 @@
   {#patch_list#}
 </define-tag>
 
+<define-tag patch endtag=required>
+  <div class="patch">
+  %body
+  </div>
+</define-tag>
+
 <define-tag patch-title endtag=required>
-<h3><a <attributes-quote %attributes />>%body</a></h3>
+<h3 class="patch-title"><a <attributes-quote %attributes />>%body</a></h3>
 </define-tag>
 
 <define-tag patch-description endtag=required>
-  <div><ul>
+  <div class="patch-description"><ul>
     %body
   </ul></div>
 </define-tag>
