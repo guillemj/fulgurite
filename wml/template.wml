@@ -17,7 +17,7 @@
     <page-valid>
     {#scm_id#}
     <div class="copyright">
-      Copyright &copy; 2001, 2002, 2003, 2004  $(webmaster_name)
+      Copyright &copy; $(copyright_years) $(webmaster_name)
     </div>
   </div>
 
