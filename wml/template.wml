@@ -1,3 +1,6 @@
+#use wml::page
+#use wml::toc
+
 #use wml::header
 {#body#}
 #use wml::footer
