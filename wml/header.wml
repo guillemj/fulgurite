@@ -1,5 +1,4 @@
 #use wml::l10n
-#use wml::local
 
 <?xml version="1.0" encoding="<:=$CHARSET:>"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
@@ -10,9 +9,9 @@
   <meta http-equiv="Content-Language" content="$(LANG)" />
   <title>$(title)</title>
   <meta name="Language" content="<:=$LANGUAGE:>" />
-  <link rev="made" href="mailto:<webmaster_mail>" />
-  <meta name="Author" content="<webmaster_name>" />
+  <link rev="made" href="mailto:$(webmaster_mail)" />
+  <meta name="Author" content="$(webmaster_name)" />
   <meta name="Generator" content="WML $(WML_VERSION)" />
-  <link rel="stylesheet" type="text/css" href="<wml_stylesheet>" />
+  <link rel="stylesheet" type="text/css" href="$(wml_stylesheet)" />
 </head>
 <body>
