@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.13 2003/10/07 04:59:59 guillem Exp $
+# $Id: patch2htms,v 1.14 2003/10/07 05:24:47 guillem Exp $
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -41,6 +41,8 @@ parse_rfc822 ()
 	echo "    <patch-title href=\"$filename\">$title</patch-title>"
 	echo "    <patch-description>"
 
+	REAL_IFS=$IFS
+	IFS=
 	prev_entry=empty
 	cat $filename | while read line
 	do
@@ -51,10 +53,10 @@ parse_rfc822 ()
 		if [ ${#line} -eq 0 ]; then break; fi
 
 		# Split the line
-		OLD_IFS=$IFS
+		LOCAL_IFS=$IFS
 		IFS=":"
 		set -- $line
-		IFS=$OLD_IFS
+		IFS=$LOCAL_IFS
 
 		field="$1"
 		shift
@@ -93,6 +95,7 @@ parse_rfc822 ()
 			prev_entry=field
 		fi
 	done
+	IFS=$REAL_IFS
 
 	echo "      </li>"
 	echo "    </patch-description>"
@@ -120,7 +123,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="patch2htms \$Revision: 1.13 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.14 $ ">
 	  <common-style>
 	</head>
 	<body>
@@ -135,7 +138,7 @@ generate_htms ()
 	do
 		Status_Note=$(echo $Status | tr '-' ' ')
 		cat >> $BASENAME.htms <<-HEADER
-		    <index-entry href="#$Status">$Status_Note</index-entry>"
+		    <index-entry href="#$Status">$Status_Note</index-entry>
 		HEADER
 	done
 
