@@ -1,0 +1,38 @@
+#
+# style.plain
+#
+#	$Id: style.plain,v 1.1 2003/01/03 07:41:55 guillem Exp $
+#
+#	Convert HTMS to Std HTML with plain style
+#
+# Copyright (C) 2002 Guillem Jover <guillem.jover@menta.net>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+s%<generator-meta>%<meta name="Generator" content="htms2html plain style $Revision: 1.1 $">%
+
+s%<body body-style>%<body>%
+
+s%<page-style>%%
+s%<page-contents>%<!-- Page Contents -->%
+s%</page-contents>%%
+s%<page-separator>%<hr size="2" width="100\%"/>%
+s%<page-footer>%<!-- Page Footer --><span>%
+s%</page-footer>%</span>%
+    
+s%<page-index>%<!-- Page Index -->[ \| %
+s%</page-index>% ] <hr size="2" width="100\%"/>%
+s%<index-entry %<a %
+s%</index-entry>%</a> \| %
+s%<index-separator>% ]<br/>[ \| %
+
+s%<changelog>%<!-- ChangeLog Section --><dl>%
+s%</changelog>%</dl>%
+s%<changelog-title>%<dt><strong>%
+s%</changelog-title>%</strong>%
+s%<changelog-entry>%<dd>%
+s%</changelog-entry>%%

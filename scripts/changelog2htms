@@ -1,0 +1,56 @@
+#!/usr/bin/gawk -f
+#
+# changelog2htms
+#
+#	$Id: changelog2htms,v 1.1 2003/01/03 07:41:55 guillem Exp $
+#
+#	Convert a ChangeLog to a HTMS snippet
+#
+# Copyright (C) 2002, 2003 Guillem Jover <guillem.jover@menta.net>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+BEGIN {
+	max_recent = 8
+	recent = 0
+	entry = 0
+	print "<changelog>"
+}
+
+/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/ {
+	if ( recent >= max_recent )
+		exit 0
+	else
+		recent++
+
+	if ( entry )
+		print "</changelog-entry>"
+
+	print "<changelog-title>"
+	print
+	print "</changelog-title>"
+	print "<changelog-entry>"
+	entry = 1
+	next
+}
+
+/\.$/ {
+	print $0, "<br>"
+	next
+}
+
+{
+	print
+}
+
+END {
+	if ( entry )
+		print "</changelog-entry>"
+
+	print "</changelog>"
+}
+

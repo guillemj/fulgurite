@@ -1,0 +1,50 @@
+<sgml-doctype>
+<!-- $Id: template.htms,v 1.1 2003/01/03 07:41:55 guillem Exp $ -->
+
+<html>
+  <head>
+    <content-meta>
+    <title>#TITLE#</title>
+    <language-meta>
+    <common-meta>
+    <common-style>
+  </head>
+
+  <body body-style>
+    <page-index>
+      <index-entry href="#INDEX_LINK#">#INDEX</index-entry>
+
+      <index-separator>
+
+      <index-entry href="#INDEX_LINK#">#INDEX</index-entry>
+    </page-index>
+
+    <page-separator>
+
+    <page-contents>
+      <changelog-file>
+      or
+      <changelog>
+        <changelog-title>
+          #CHANGELOG_TITLE#
+        </changelog-title>
+        <changelog-entry>
+          #CHANGELOG_TEXT#
+        </changelog-entry>
+
+        <changelog-title>
+          #CHANGELOG_TITLE#
+        </changelog-title>
+        <changelog-entry>
+          #CHANGELOG_TEXT#
+        </changelog-entry>
+      </changelog>
+    </page-contents>
+
+    <page-separator>
+
+    <page-footer>
+      Last modified: $Date: 2003/01/03 07:41:55 $
+    </page-footer>
+  </body>
+</html>

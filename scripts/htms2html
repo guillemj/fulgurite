@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# htms2html
+#
+#	$Id: htms2html,v 1.1 2003/01/03 07:41:55 guillem Exp $
+#
+#	Convert HTMS to Std HTML
+#
+# Copyright (C) 2001, 2002 Guillem Jover <guillem.jover@menta.net>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+input=$1
+
+[ -f "$input" ] || (echo "htms2html: input file does not exist" > /dev/stderr; exit 1)
+
+BIN_DIR=$(dirname $0)
+STYLE_DIR=$BIN_DIR
+STYLE_LIST=$(ls $STYLE_DIR/style.*)
+
+DEFAULT_STYLE="plain"
+
+if [ -z "$STYLE" ]; then
+	STYLE=$DEFAULT_STYLE
+else
+	echo $STYLE_LIST | grep $STYLE > /dev/null 2>&1
+	if [ $? != 0 ]; then
+		echo "htms2html: specified style is not available" > /dev/stderr
+		exit 2
+	fi
+fi
+
+# Insert ChangeLog if it exists
+changelog_file=$(basename $input .htms).ChangeLog
+
+(
+if [ -f $changelog_file ]; then
+	tmp=/tmp/changelog2htms.$$
+	$BIN_DIR/changelog2htms < $changelog_file > $tmp
+	sed -n "/<changelog-file>/!p;/<changelog-file>/r $tmp" < $input
+	rm -f $tmp
+else
+	cat $input
+fi
+) |
+
+# Apply style
+sed -f $STYLE_DIR/style.common | sed -f $STYLE_DIR/style.$STYLE
+
