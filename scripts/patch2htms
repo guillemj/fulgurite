@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.11 2003/10/07 02:14:19 guillem Exp $
+# $Id: patch2htms,v 1.12 2003/10/07 02:31:41 guillem Exp $
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -26,6 +26,7 @@ BUILDDIR=${2:-$PATCHDIR}
 BASENAME=${3:-patches}
 
 FIELDS_EXCLUDED="Author"
+STATUS_LIST="not-applied applied fixed"
 
 iso-date ()
 {
@@ -44,7 +45,7 @@ parse_rfc822 ()
 	prev_entry=empty
 	cat $filename | while read line
 	do
-		line=`echo "$line"|sed -e 's%[[:space:]]*$%%' \
+		line=`echo "$line" | sed -e 's%[[:space:]]*$%%' \
 			-e 's%<%\&lt;%g; s%>%\&gt;%g'`
 
 		# End of RFC822 header data
@@ -68,7 +69,8 @@ parse_rfc822 ()
 
 		if [ "$field" = "Status" ]
 		then
-			field_status=$(echo $content | tr '[:upper:] ' '[:lower:]-')
+			field_status=$(echo $content | \
+			               tr '[:upper:] ' '[:lower:]-')
 			echo $field_status >&2
 		fi
 
@@ -79,7 +81,8 @@ parse_rfc822 ()
 				echo " <br />"
 			fi
 
-			entry="$(echo "$line"|sed -e 's%^ \.%<br />%; s%[.:]$%&<br />%')"
+			entry="$(echo "$line" | \
+			         sed -e 's%^ \.%<br />%; s%[.:]$%&<br />%')"
 			echo "      $entry"
 			prev_entry=description
 		else
@@ -118,7 +121,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="patch2htms \$Revision: 1.11 $ ">
+	  <meta name="Generator" content="patch2htms \$Revision: 1.12 $ ">
 	  <common-style>
 	</head>
 	<body>
@@ -126,10 +129,17 @@ generate_htms ()
 	    <index-entry href="./">Home</index-entry>
 	
 	    <index-separator>
+	HEADER
 
-	    <index-entry href="#not-applied">Not Applied</index-entry>
-	    <index-entry href="#applied">Applied</index-entry>
-	    <index-entry href="#fixed">Fixed</index-entry>
+	for Status in "$STATUS_LIST"
+	do
+		Status_Note=$(echo $Status | tr '-' ' ')
+		cat >> $BASENAME.htms <<-HEADER
+		    <index-entry href="#$Status">$Status_Note</index-entry>"
+		HEADER
+	done
+
+	cat >> $BASENAME.htms <<-HEADER
 	  </page-index>
 	
 	  <page-contents>
@@ -137,7 +147,7 @@ generate_htms ()
 	
 	HEADER
 
-	for Status in not-applied applied fixed
+	for Status in "$STATUS_LIST"
 	do
 		if [ -e $BASENAME.body-$Status.htms ]
 		then
