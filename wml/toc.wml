@@ -1,6 +1,9 @@
 # $Id$
 
-<define-tag toc-dir-file></define-tag>
+<define-tag toc-dir-file>
+  <include file="index.$(LANG).toc" alt="true">
+</define-tag>
+
 <define-tag toc-file></define-tag>
 
 <define-tag toc endtag=required>
