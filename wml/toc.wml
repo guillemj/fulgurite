@@ -12,11 +12,11 @@
 </define-tag>
 
 <define-tag index-title endtag=required>
-<span class="menu-title"><a %attributes>%body</a></span>
+<span class="menu-title"><a <attributes-quote %attributes />>%body</a></span>
 </define-tag>
 
 <define-tag index-entry endtag=required>
-<a %attributes>%body</a>
+<a <attributes-quote %attributes />>%body</a>
 </define-tag>
 
 <define-tag index-separator></define-tag>
