@@ -1,23 +1,27 @@
-<define-tag page-dir-toc></define-tag>
+<define-tag toc-dir-file></define-tag>
+<define-tag toc-file></define-tag>
 
-<define-tag page-index endtag=required>
-<!-- Page Index -->
+<define-tag toc endtag=required>
+<!-- TOC Index -->
 <div class="menu">
+  [ |
   %body
+  ]
+  <page-separator>
 </div>
 </define-tag>
 
-<define-tag index-section endtag=required>
+<define-tag toc-section endtag=required>
 <p>%body</p>
 </define-tag>
 
-<define-tag index-title endtag=required>
+<define-tag toc-title endtag=required>
 <span class="menu-title"><a <attributes-quote %attributes />>%body</a></span>
 </define-tag>
 
-<define-tag index-entry endtag=required>
-<a <attributes-quote %attributes />>%body</a>
+<define-tag toc-entry endtag=required>
+<a <attributes-quote %attributes />>%body</a> |
 </define-tag>
 
-<define-tag index-separator></define-tag>
+<define-tag toc-separator> ]<br />[ | </define-tag>
 
