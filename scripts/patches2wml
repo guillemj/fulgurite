@@ -1,0 +1,117 @@
+#!/bin/bash
+#
+# patches2htms patchdir [builddir] [basename]
+#
+# $Id$
+#
+#	Generates a wml file from a list of patches in rfc822 format,
+#	uses builddir to output all temp files and the result, and patchdir
+#	is the dir from where the relative paths to patches is taken.
+#	The only restriction is that patchdir should be a subdirectory of
+#	builddir.
+#
+# Copyright (C) 2003, 2004 Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+PROGRAM=patches2wml
+
+SCRIPTDIR=$(dirname $0)
+PATCHDIR=$1
+BUILDDIR=${2:-$PATCHDIR}
+BASENAME=${3:-patches}
+
+STATUS_LIST="not-applied applied fixed"
+
+generate_body ()
+{
+  for f in `find $PATCHDIR -name '*.patch' | sed -e 's/^\.\///'`
+  do
+    $SCRIPTDIR/patch2wml $f > $BASENAME.entry.wml 2> $BASENAME.status
+    Status=$(cat $BASENAME.status)
+    echo $f: $Status
+    cat $BASENAME.entry.wml >> $BASENAME.body$Status.wml
+  done
+}
+
+generate_wml ()
+{
+  cat > $BASENAME.wml <<-HEADER
+	#use wml::template title="Patches"
+	#use wml::patch
+	
+	<toc>
+	  <toc-entry href="../">Home</toc-entry>
+	  <toc-separator>
+	HEADER
+
+  for Status in $STATUS_LIST
+  do
+    Status_Note=$(echo $Status | tr '-' ' ')
+    cat >> $BASENAME.wml <<-HEADER
+	  <toc-entry href="#$Status">$Status_Note</toc-entry>
+	HEADER
+  done
+
+  cat >> $BASENAME.wml <<-HEADER
+	</toc>
+	
+	<page-contents>
+	  <h1>Patches List</h1>
+	
+	HEADER
+
+  for Status in $STATUS_LIST
+  do
+    if [ -e $BASENAME.body$Status.wml ]
+    then
+      Status_Note=$(echo $Status | tr '-' ' ')
+      cat >> $BASENAME.wml <<-SECTION
+	  <h2><a id="$Status">Patches $Status_Note</a></h2>
+	SECTION
+      cat $BASENAME.body$Status.wml >> $BASENAME.wml
+    fi
+  done
+
+  if [ -e $BASENAME.body.wml ]
+  then
+    cat >> $BASENAME.wml <<-SECTION
+	  <hr>
+	  <h2><a id="unkwnown">Patches unkwnown status</a></h2>
+	SECTION
+    cat $BASENAME.body.wml >> $BASENAME.wml
+  fi
+
+  cat >> $BASENAME.wml <<-FOOTER
+	</page-contents>
+	
+	<page-separator>
+	
+	<page-footer>
+	  Automatically generated on: \$(WML_GEN_ISOTIME)
+	</page-footer>
+	FOOTER
+}
+
+#
+# Main program
+#
+
+if [ "$PATCHDIR" = "$BUILDDIR" ]
+then
+  PATCHDIR="."
+fi
+
+cd $BUILDDIR
+
+generate_body
+generate_wml
+
+rm -f $BASENAME.body* $BASENAME.entry* $BASENAME.status
+
+exit 0
+

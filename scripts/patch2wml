@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+#
+# patch2wml patch
+#
+# $Id: patch2htms 110 2004-03-11 19:18:29Z guillem $
+#
+#	Generates a wml file from a patch in rfc822 format.
+#
+# Copyright (C) 2003, 2004 Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+use warnings;
+use strict;
+
+my @excluded_fields = ("Author");
+my @status_list = ("not-applied", "applied", "fixed");
+
+sub parse_rfc822 ($)
+{
+	my $filename = shift;
+	my $title = $filename;
+
+	print "    <patch-title href=\"$filename\">$title</patch-title>\n";
+	print "    <patch-description>\n";
+
+	my $prev_entry = "empty";
+
+	open(INFILE, $filename) or die "Cannot open $filename: $!";
+
+	line: while (<INFILE>) {
+		chomp;
+		s/</&lt;/g;
+		s/>/&gt;/g;
+
+		# End of RFC822 header data
+		last if !length;
+
+		# Split the line
+		/^([^:]*): *(.*)$/;
+
+		my $field = $1;
+		my $content = $2;
+
+		if (/^ /) {
+			print " <br />\n" if ($prev_entry eq "field");
+
+			s/^ \./<br \/>/;
+			s/([.:])$/$1<br \/>/;
+			print $_, "\n";
+			$prev_entry = "description";
+		} else {
+			# Don't show excluded fields
+			foreach my $excluded (@excluded_fields) {
+				next line if ($field eq $excluded);
+			}
+
+			if ($field eq "Status") {
+				my $field_status = $content;
+				$field_status =~ tr/A-Z /a-z-/;
+				print STDERR "$field_status\n";
+			}
+
+			print "</li>\n" if ($prev_entry ne "empty");
+			print "      <li><strong>$field: $content</strong>";
+			$prev_entry = "field";
+		}
+	}
+
+	close INFILE;
+
+	print "      </li>\n";
+	print "    </patch-description>\n";
+	print "\n";
+}
+
+my $filename = $ARGV[0];
+
+if (-e $filename) {
+	parse_rfc822($filename);
+}
+
