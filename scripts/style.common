@@ -1,11 +1,11 @@
 #
 # style.common
 #
-#	$Id: style.common,v 1.2 2003/01/19 00:42:10 guillem Exp $
+#	$Id: style.common,v 1.3 2003/03/26 22:11:00 guillem Exp $
 #
 #	Convert HTMS to Std HTML with common style
 #
-# Copyright (C) 2002 Guillem Jover <guillem.jover@menta.net>
+# Copyright (C) 2002,2003 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
 s%<sgml-doctype>%<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" \
   "http://www.w3.org/TR/REC-html40/loose.dtd">%
 
-s%<content-meta>%<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">\
-  <meta http-equiv="Content-Language" content="en-us">%
-s%<language-meta>%<meta name="Language" content="English">%
-s%<common-meta>%<link rev="made" href="mailto:guillem.jover@menta.net">\
-  <meta name="Author" content="Guillem Jover">\
+s%<content-meta>%<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\
+  <meta http-equiv="Content-Language" content="en-us" />%
+s%<language-meta>%<meta name="Language" content="English" />%
+s%<common-meta>%<link rev="made" href="mailto:guillem@hadrons.org" />\
+  <meta name="Author" content="Guillem Jover" />\
   <generator-meta>%
 
-s%<common-style>%<link rel="stylesheet" type="text/css" href="style/hedrons.css">%
+s%<common-style>%<link rel="stylesheet" type="text/css" href="style/hedrons.css" />%
