@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir builddir
 #
-# $Id: patch2htms,v 1.8 2003/09/19 04:24:37 guillem Exp $
+# $Id: patch2htms,v 1.9 2003/09/19 04:49:03 guillem Exp $
 #
 #	generates an htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -92,15 +92,14 @@ parse_rfc822 ()
 
 generate_body ()
 {
-	cd $PATCHDIR
-	for f in `find */ -name '*.patch'`
+	# XXX: Nasty Hack fix ASAP
+	for f in `find $BASENAME/ -name '*.patch'`
 	do
 		parse_rfc822 $f > $BUILDDIR/$BASENAME.entry.htms 2> $BUILDDIR/$BASENAME.status
 		Status=$(cat $BUILDDIR/$BASENAME.status)
 		echo $f: $Status
 		cat $BUILDDIR/$BASENAME.entry.htms >> $BUILDDIR/$BASENAME.body$Status.htms
 	done
-	cd -
 }
 
 generate_htms ()
@@ -113,7 +112,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.8 $ ">
+	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.9 $ ">
 	  <common-style>
 	</head>
 	<body>
