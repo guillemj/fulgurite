@@ -2,13 +2,15 @@
 <define-tag toc-file></define-tag>
 
 <define-tag toc endtag=required>
+{#toc#:
 <!-- TOC Index -->
 <div class="menu">
   [ |
   %body
   ]
-  <page-separator>
+  <hr />
 </div>
+:##}
 </define-tag>
 
 <define-tag toc-section endtag=required>

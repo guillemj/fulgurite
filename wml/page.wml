@@ -1,8 +1,11 @@
+<define-tag scm-id>
+  {#scm_id#:%0:##}
+</define-tag>
+
 <define-tag page-contents endtag=required>
-  <!-- Page Contents -->
-  <div class="content">
-    %body
-  </div>
+  {#page_contents#:
+  %body
+  :##}
 </define-tag>
 
 <define-tag page-separator>
@@ -28,11 +31,9 @@
 </define-tag>
 
 <define-tag page-footer endtag=required>
-  <!-- Page Footer -->
-  <div class="footer">
-    <page-valid>
-    %body
-  </div>
+  {#page_footer#:
+  %body
+  :##}
 </define-tag>
 
 <define-tag page-title endtag=required>

@@ -2,7 +2,7 @@
 #
 # patch2wml patch
 #
-# $Id: patch2htms 110 2004-03-11 19:18:29Z guillem $
+# $Id$
 #
 #	Generates a wml file from a patch in rfc822 format.
 #
@@ -16,6 +16,7 @@
 
 use warnings;
 use strict;
+use Digest::MD5 qw(md5_hex);
 
 my @excluded_fields = ("Author");
 my @status_list = ("not-applied", "applied", "fixed");
@@ -24,7 +25,10 @@ sub parse_rfc822 ($)
 {
 	my $filename = shift;
 	my $title = $filename;
+	my $patchname = md5_hex($filename);
+	my $status = "unknown";
 
+	print "{#patch_$patchname#:\n";
 	print "    <patch-title href=\"$filename\">$title</patch-title>\n";
 	print "    <patch-description>\n";
 
@@ -60,9 +64,8 @@ sub parse_rfc822 ($)
 			}
 
 			if ($field eq "Status") {
-				my $field_status = $content;
-				$field_status =~ tr/A-Z /a-z-/;
-				print STDERR "$field_status\n";
+				$status = $content;
+				$status =~ tr/- A-Z/__a-z/;
 			}
 
 			print "</li>\n" if ($prev_entry ne "empty");
@@ -76,6 +79,11 @@ sub parse_rfc822 ($)
 	print "      </li>\n";
 	print "    </patch-description>\n";
 	print "\n";
+	print ":##}\n";
+
+	print "{#patch_list_$status#:\n";
+	print "  {#patch_$patchname#}\n";
+	print ":##}\n";
 }
 
 my $filename = $ARGV[0];

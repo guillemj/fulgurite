@@ -1,9 +1,27 @@
-#use wml::page
-#use wml::toc
-
 #use wml::header
-{#body#}
+
+#use wml::toc
+  {#toc#}
+
+#use wml::page
+  <!-- Page Contents -->
+  <div class="content">
+    {#page_contents#}
+  </div>
+
+  <hr />
+
+  <!-- Page Footer -->
+  <div class="footer">
+    <page-valid>
+    {#scm_id#}
+    <div class="copyright">
+      Copyright &copy; 2001, 2002, 2003, 2004  <webmaster_name>
+    </div>
+    {#page_footer#}
+  </div>
+
 #use wml::footer
 
-{#body#:
+{#page_contents#:
 

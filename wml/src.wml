@@ -1,0 +1,8 @@
+<define-tag url_GPL>
+<a href="http://www.gnu.org/licenses/gpl.html">GPL</a>
+</define-tag>
+
+<define-tag download>
+<a href="%0">%0</a>
+</define-tag>
+
