@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# patch2wml patch
+# patch2wml patch [title]
 #
 # $Id$
 #
@@ -21,10 +21,10 @@ use Digest::MD5 qw(md5_hex);
 my @excluded_fields = ("Author");
 my @status_list = ("not-applied", "applied", "fixed");
 
-sub parse_rfc822 ($)
+sub parse_rfc822 ($$)
 {
 	my $filename = shift;
-	my $title = $filename;
+	my $title = shift;
 	my $patchname = md5_hex($filename);
 	my $status = "unknown";
 
@@ -89,8 +89,15 @@ sub parse_rfc822 ($)
 }
 
 my $filename = $ARGV[0];
+my $title;
+
+if (defined $ARGV[1]) {
+  $title = $ARGV[1];
+} else {
+  $title = $filename;
+}
 
 if (-e $filename) {
-	parse_rfc822($filename);
+	parse_rfc822($filename, $title);
 }
 

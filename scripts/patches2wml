@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# patches2wml patchdir [builddir]
+# patches2wml patchdir
 #
 # $Id$
 #
@@ -23,21 +23,8 @@ use strict;
 
 my $scriptdir = "~/web/scripts";
 my $patchdir = $ARGV[0];
-my $builddir;
-
-if (defined $ARGV[1]) {
-  $builddir = $ARGV[1];
-} else {
-  $builddir = $patchdir;
-}
 
 my @status_list = ("not_applied", "applied", "fixed", "unknown");
-
-if ($patchdir = $builddir) {
-  $patchdir = ".";
-}
-
-chdir $builddir;
 
 foreach (@status_list) {
   my $status_note = $_;
@@ -52,9 +39,16 @@ foreach (@status_list) {
   print ":##}\n";
 }
 
-open CMD, "find $patchdir -name '*.patch' | sed -e 's,^\./,,' | sort |";
+open CMD, "find $patchdir/ -name '*.patch' | sort |";
 while (<CMD>) {
-    system "$scriptdir/patch2wml $_";
+  chomp;
+
+  my $patch = $_;
+  $patch =~ s/^\.\///;
+  my $title = $_;
+  $title =~ s/^$patchdir\///;
+
+  system "$scriptdir/patch2wml '$patch' '$title'";
 }
 close CMD;
 
