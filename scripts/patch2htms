@@ -2,7 +2,7 @@
 #
 # patch2htms patchdir [builddir] [basename]
 #
-# $Id: patch2htms,v 1.16 2003/11/11 19:01:53 guillem Exp $
+# $Id$
 #
 #	Generates a htms file from a list of patches in rfc822 format,
 #	uses builddir to output all temp files and the result, and patchdir
@@ -89,7 +89,7 @@ parse_rfc822 ()
 			echo "      $entry"
 			prev_entry=description
 		else
-			entry="<b>$field: $content</b>"
+			entry="<strong>$field: $content</strong>"
 			if [ $prev_entry != "empty" ]; then
 				echo "</li>"
 			fi
