@@ -2,7 +2,7 @@
 #
 # patch2htms language directory
 #
-# $Id: patch2htms,v 1.2 2003/04/23 18:27:12 guillem Exp $
+# $Id: patch2htms,v 1.3 2003/04/23 18:29:42 guillem Exp $
 #
 #	generates an htms file from a list of patches in rfc822 format
 #
@@ -54,7 +54,7 @@ parse_rfc822 ()
 			fi
 
 			entry="$(echo "$line"|sed -e 's%^ \.%<br />%; s%\.$%.<br />%')"
-			echo "    $entry"
+			echo "      $entry"
 			prev_entry=description
 		else
 			entry="$(echo "$line"|sed -e 's%^%<b>%; s%^[^:]*%&</b>%')"
@@ -90,7 +90,7 @@ generate_htms ()
 	  <title>Patches</title>
 	  <language-meta>
 	  <common-meta>
-	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.2 $ ">
+	  <meta name="Generator" content="rfc822_to_html \$Revision: 1.3 $ ">
 	  <common-style>
 	</head>
 	<body>
@@ -105,6 +105,7 @@ generate_htms ()
 	    All patches here are not applied yet. Patches applied will be
 	    removed.
 	    </p>
+	
 	HEADER
 
 	cat patches.body.htms >> patches.htms
