@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+#
+# news2wml
+#
+# $Id$
+#
+#	Convert a news to a wml snippet
+#
+# Copyright (C) 2002, 2003, 2004  Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+use warnings;
+use strict;
+
+my $filename = $ARGV[0];
+
+exit 0 if (! -e $filename);
+
+open(INFILE, $filename) or die "Cannot open $filename: $!";
+
+$, = ' ';		# set output field separator
+$\ = "\n";		# set output record separator
+
+my $max_recent = 8;
+my $recent = 0;
+my $entry = 0;
+
+print '<news>';
+
+while (<INFILE>) {
+    chomp;	# strip record separator
+
+    if (/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/) {
+	if ($recent >= $max_recent) {
+	    last;
+	} else {
+	    $recent++;
+	}
+	print '</news-entry>' if ($entry);
+	print '<news-title>';
+	print;
+	print '</news-title>';
+	print '<news-entry>';
+	$entry = 1;
+	next;
+    }
+
+    if (/\.$/) {
+	print $_, '<br />';
+	next;
+    }
+
+    print;
+}
+
+close INFILE;
+
+print '</news-entry>' if ($entry);
+print '</news>';
+
