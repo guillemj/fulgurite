@@ -31,7 +31,7 @@ foreach (@status_list) {
   print "{#patch_toc#:<toc-entry href=\"#$_\">$status_note</toc-entry>:##}\n";
   print "{#patch_list#:\n";
   print "<div class=\"patches_$_\">\n";
-  print "  <h2><a id=\"$_\">Patches $status_note</a></h2>\n";
+  print "  <h2 id=\"$_\">Patches $status_note</h2>\n";
   print "  {#patch_list_$_#}\n";
   print "</div>\n";
   print "<hr />\n";
