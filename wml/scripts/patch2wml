@@ -6,7 +6,7 @@
 #
 #	Generates a wml file from a patch in rfc822 format.
 #
-# Copyright (C) 2003, 2004 Guillem Jover <guillem@hadrons.org>
+# Copyright (C) 2003, 2004, 2005 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
