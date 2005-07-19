@@ -39,6 +39,7 @@ sub parse_rfc822 ($$)
 
 	line: while (<INFILE>) {
 		chomp;
+		s/&/&amp;/g;
 		s/</&lt;/g;
 		s/>/&gt;/g;
 
@@ -79,7 +80,7 @@ sub parse_rfc822 ($$)
 
 	close INFILE;
 
-	print "      </li>\n";
+	print "      </li>\n" if ($prev_field ne "empty");
 	print "    </patch-description>\n";
 	print "  </patch>\n";
 	print "\n";
