@@ -56,7 +56,7 @@ foreach (@status_list) {
   print ":##}\n";
 
   print "{#patch_summary#:\n";
-  print "  <li>$status_note patches (<get-var n_$_ />)</li>\n";
+  print "  <li><a href=\"#$_\">$status_note</a> (<get-var n_$_ />)</li>\n";
   print ":##}\n";
 }
 
