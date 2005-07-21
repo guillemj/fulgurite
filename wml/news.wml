@@ -1,8 +1,9 @@
 # $Id$
 
 <define-tag news endtag=required>
-<!-- News Section -->
+<div class="news">
   %body
+</div>
 </define-tag>
 
 <define-tag news-title endtag=required>
@@ -18,7 +19,7 @@
 </define-tag>
 
 <define-tag news-entry endtag=required>
-<div class="news">
+<div class="news-entry">
   %body
 </div>
 </define-tag>

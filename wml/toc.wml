@@ -7,7 +7,6 @@
 <define-tag toc-file></define-tag>
 
 <define-tag toc-tmpl>
-<!-- TOC Index -->
 <div class="toc">
   [ |
   {#toc#}
