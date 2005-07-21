@@ -6,15 +6,15 @@
 </define-tag>
 
 <define-tag news-title endtag=required>
-  <span class="news-title"><strong>
-    %body
-  </strong></span>
+<div class="news-title">
+  <strong>%body</strong>
+</div>
 </define-tag>
 
 <define-tag news-body endtag=required>
-<p>
+<div class="news-body">
   %body
-</p>
+</div>
 </define-tag>
 
 <define-tag news-entry endtag=required>

@@ -6,20 +6,26 @@
 
 <define-tag toc-file></define-tag>
 
-<define-tag toc endtag=required>
-{#toc#:
+<define-tag toc-tmpl>
 <!-- TOC Index -->
 <div class="toc">
   [ |
-  %body
+  {#toc#}
   ]
 </div>
 <hr />
+</define-tag>
+
+<define-tag toc endtag=required>
+{#toc#:
+  %body
 :##}
 </define-tag>
 
 <define-tag toc-section endtag=required>
-<p>%body</p>
+<div class="toc-section">
+  %body
+</div>
 </define-tag>
 
 <define-tag toc-title endtag=required>

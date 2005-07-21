@@ -3,25 +3,16 @@
 #use wml::header
 
 #use wml::toc
-  {#toc#}
+
+  <toc-tmpl>
 
 #use wml::page
-  <!-- Page Contents -->
-  <div class="content">
-    {#page_contents#}
-  </div>
 
-  <hr />
+  <page-contents-tmpl>
 
-  <!-- Page Footer -->
-  <div class="footer">
-    {#page_footer#}
-    <page-valid>
-    {#scm_id#}
-    <div class="copyright">
-      Copyright &copy; $(copyright_years) $(webmaster_name)
-    </div>
-  </div>
+  <page-separator>
+
+  <page-footer-tmpl>
 
 #use wml::footer
 

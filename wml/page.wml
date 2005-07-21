@@ -4,6 +4,12 @@
   {#scm_id#:%0:##}
 </define-tag>
 
+<define-tag page-contents-tmpl>
+  <div class="page-content">
+    {#page_contents#}
+  </div>
+</define-tag>
+
 <define-tag page-contents endtag=required>
   {#page_contents#:
   %body
@@ -15,7 +21,7 @@
 </define-tag>
 
 <define-tag page-logo>
-  <div class="logo">
+  <div class="page-logo">
     <a href="/index"><img src="/logo.png" class="logo" alt="Home" /></a>
   </div>
 </define-tag>
@@ -32,6 +38,21 @@
   </p>
 </define-tag>
 
+<define-tag page-copyright>
+  <div class="page-copyright">
+    Copyright &copy; $(copyright_years) $(webmaster_name)
+  </div>
+</define-tag>
+
+<define-tag page-footer-tmpl>
+  <div class="page-footer">
+    {#page_footer#}
+    <page-valid>
+    {#scm_id#}
+    <page-copyright>
+  </div>
+</define-tag>
+
 <define-tag page-footer endtag=required>
   {#page_footer#:
   %body
@@ -39,8 +60,7 @@
 </define-tag>
 
 <define-tag page-title endtag=required>
-  <!-- Page Title -->
-  <div class="title">
+  <div class="page-title">
     %body
   </div>
 </define-tag>
