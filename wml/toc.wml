@@ -7,17 +7,16 @@
 <define-tag toc-file></define-tag>
 
 <define-tag toc-tmpl>
-<div class="toc">
-  [ |
   {#toc#}
-  ]
-</div>
-<hr />
 </define-tag>
 
 <define-tag toc endtag=required>
 {#toc#:
-  %body
+  <div class="toc">
+    [ |
+      %body
+    ]
+  </div>
 :##}
 </define-tag>
 
