@@ -21,7 +21,9 @@
 </define-tag>
 
 <define-tag patch-title endtag=required>
-<h3 class="patch-title"><a <attributes-quote %attributes />>%body</a></h3>
+  <div class="patch-title">
+    <strong><a <attributes-quote %attributes />>%body</a></strong>
+  </div>
 </define-tag>
 
 <define-tag patch-description endtag=required>
