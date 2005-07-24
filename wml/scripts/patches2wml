@@ -7,7 +7,7 @@
 #	Generates a wml list of patches in rfc822 format from patchdir.
 #	The patch title is the patch filename with the patchdir stripped.
 #
-# Copyright (C) 2003, 2004 Guillem Jover <guillem@hadrons.org>
+# Copyright (C) 2003, 2004, 2005 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ foreach (@status_list) {
 
   print "{#patch_list#:\n";
   print "<div class=\"patches_$_\">\n";
-  print "  <h2 id=\"$_\">Patches $status_note</h2>\n";
+  print "  <h3 id=\"$_\">Patches $status_note</h3>\n";
   print "  {#patch_list_$_#}\n";
   print "</div>\n";
   print "<hr />\n";
