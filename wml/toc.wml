@@ -17,7 +17,7 @@
       %body
     ]
   </div>
-  <hr />
+  <div class="separator"><hr /></div>
 :##}
 </define-tag>
 

@@ -17,7 +17,7 @@
 </define-tag>
 
 <define-tag page-separator>
-  <hr />
+  <div class="separator"><hr /></div>
 </define-tag>
 
 <define-tag page-logo>

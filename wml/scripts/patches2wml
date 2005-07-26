@@ -52,7 +52,6 @@ foreach (@status_list) {
   print "  <h3 id=\"$_\">Patches $status_note</h3>\n";
   print "  {#patch_list_$_#}\n";
   print "</div>\n";
-  print "<hr />\n";
   print ":##}\n";
 
   print "{#patch_summary#:\n";
