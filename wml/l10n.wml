@@ -3,13 +3,13 @@
 <:
 my %langs_map = (
   ca => { Language => 'Catalan',
-	  Charset  => 'iso-8859-15',
+	  Charset  => 'utf-8',
 	},
   es => { Language => 'Spanish',
-	  Charset  => 'iso-8859-15',
+	  Charset  => 'utf-8',
 	},
   en => { Language => 'English',
-	  Charset  => 'iso-8859-1',
+	  Charset  => 'utf-8',
 	},
 );
 
