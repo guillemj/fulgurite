@@ -16,10 +16,6 @@
   :##}
 </define-tag>
 
-<define-tag page-separator>
-  <div class="separator"><hr /></div>
-</define-tag>
-
 <define-tag page-logo>
   <div class="page-logo">
     <a href="$(wml_base)/index"><img src="$(wml_logo)" class="logo" alt="Home" /></a>

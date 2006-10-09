@@ -1,5 +1,7 @@
 # $Id$
 
+#use wml::xhtml2
+
 #use wml::header
 
 #use wml::toc
@@ -10,7 +12,7 @@
 
   <page-contents-tmpl>
 
-  <page-separator>
+  <separator>
 
   <page-footer-tmpl>
 

@@ -1,5 +1,7 @@
 # $Id$
 
+#use wml::xhtml2
+
 <define-tag toc-dir-file>
   <include file="index.$(LANG).toc" alt="true">
 </define-tag>
@@ -17,7 +19,7 @@
       %body
     ]
   </div>
-  <div class="separator"><hr /></div>
+  <separator>
 :##}
 </define-tag>
 

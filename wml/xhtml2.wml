@@ -1,0 +1,6 @@
+# $Id$
+
+<define-tag separator>
+  <div class="separator"><hr /></div>
+</define-tag>
+
