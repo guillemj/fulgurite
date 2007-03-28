@@ -19,7 +19,7 @@ use strict;
 use Digest::MD5 qw(md5_hex);
 
 my @excluded_fields = ("Author");
-my @status_list = ("not-applied", "sent", "applied", "fixed");
+my @status_list = ("not-sent", "sent", "applied", "fixed", "rejected");
 
 sub parse_rfc822 ($$)
 {
