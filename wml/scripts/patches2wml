@@ -7,7 +7,7 @@
 #	Generates a wml list of patches in rfc822 format from patchdir.
 #	The patch title is the patch filename with the patchdir stripped.
 #
-# Copyright (C) 2003, 2004, 2005 Guillem Jover <guillem@hadrons.org>
+# Copyright (C) 2003, 2004, 2005, 2007 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ use strict;
 my $scriptdir = "~/web/wml/scripts";
 my $patchdir = $ARGV[0];
 
-my @status_list = ("not_applied", "applied", "fixed", "unknown");
+my @status_list = ("not_applied", "sent", "applied", "fixed", "unknown");
 
 foreach (@status_list) {
   print "<set-var n_$_=0 />\n";
