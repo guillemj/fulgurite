@@ -7,13 +7,13 @@
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$(LANG)">
 <head>
+  <title>$(title)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=<:=$CHARSET:>" />
   <meta http-equiv="Content-Language" content="$(LANG)" />
-  <title>$(title)</title>
   <meta name="Language" content="<:=$LANGUAGE:>" />
-  <link rev="made" href="mailto:$(webmaster_mail)" />
-  <meta name="Author" content="$(webmaster_name)" />
   <meta name="Generator" content="WML $(WML_VERSION)" />
+  <meta name="Author" content="$(webmaster_name)" />
+  <link rev="made" href="mailto:$(webmaster_mail)" />
   <link rel="stylesheet" type="text/css" href="$(wml_stylesheet)" />
 </head>
 <body>
