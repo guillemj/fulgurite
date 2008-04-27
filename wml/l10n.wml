@@ -1,5 +1,3 @@
-# $Id$
-
 <:
 my %langs_map = (
   ca => { Language => 'Catalan',

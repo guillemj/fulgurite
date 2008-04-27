@@ -2,8 +2,6 @@
 #
 # patch2wml patch [title]
 #
-# $Id$
-#
 #	Generates a wml file from a patch in rfc822 format.
 #
 # Copyright (C) 2003, 2004, 2005, 2007 Guillem Jover <guillem@hadrons.org>

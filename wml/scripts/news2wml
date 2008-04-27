@@ -2,8 +2,6 @@
 #
 # news2wml
 #
-# $Id$
-#
 #	Convert a news to a wml snippet
 #
 # Copyright (C) 2002, 2003, 2004  Guillem Jover <guillem@hadrons.org>

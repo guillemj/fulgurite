@@ -1,5 +1,3 @@
-# $Id$
-
 <define-tag news endtag=required>
 <div class="news">
   %body
