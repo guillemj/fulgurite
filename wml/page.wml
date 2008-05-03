@@ -32,6 +32,13 @@
   </div>
 </define-tag>
 
+<define-tag page-timestamp>
+  <div class="page-timestamp">
+  {#scm_id#}
+  Page last built on <get-var WML_GEN_ISOTIME>.
+  <div>
+</define-tag>
+
 <define-tag page-copyright>
   <div class="page-copyright">
     Copyright &copy; $(copyright_years) $(webmaster_name)
@@ -42,7 +49,7 @@
   <div class="page-footer">
     {#page_footer#}
     <page-valid>
-    {#scm_id#}
+    <page-timestamp>
     <page-copyright>
   </div>
 </define-tag>
