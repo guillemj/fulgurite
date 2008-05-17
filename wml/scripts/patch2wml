@@ -53,9 +53,7 @@ sub parse_rfc822 ($$)
 			my $content = $2;
 
 			# Don't show excluded fields
-			foreach my $excluded (@excluded_fields) {
-				next line if ($field eq $excluded);
-			}
+			next line if grep(/$field/, @excluded_fields);
 
 			if ($field eq "Status") {
 				($status = $content) =~ tr/- A-Z/__a-z/;
