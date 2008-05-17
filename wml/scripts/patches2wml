@@ -5,7 +5,7 @@
 #	Generates a wml list of patches in rfc822 format from patchdir.
 #	The patch title is the patch filename with the patchdir stripped.
 #
-# Copyright (C) 2003, 2004, 2005, 2007 Guillem Jover <guillem@hadrons.org>
+# Copyright (C) 2003-2005, 2007-2008 Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,39 +21,61 @@ my $patchdir = $ARGV[0];
 
 my @status_list = ("not_sent", "sent", "applied", "fixed", "rejected", "unknown");
 
-foreach (@status_list) {
-  print "<set-var n_$_=0 />\n";
+sub print_status_counter($)
+{
+	my $status = shift;
+
+	print "<set-var n_$status=0 />\n";
 }
 
-open CMD, "find $patchdir/ -name '*.patch' | sort |";
-while (<CMD>) {
-  chomp;
+sub print_status_summary($)
+{
+	my $status = shift;
+	my $status_note = $status;
 
-  my $patch = $_;
-  $patch =~ s/^\.\///;
-  my $title = $_;
-  $title =~ s/^$patchdir\///;
+	$status_note =~ tr/_/ /;
 
-  system "$scriptdir/patch2wml '$patch' '$title'";
+	print "{#patch_toc#:\n";
+	print "<toc-entry href=\"#$status\">$status_note</toc-entry>\n";
+	print ":##}\n";
+
+	print "{#patch_list#:\n";
+	print "<div class=\"patches_$status\">\n";
+	print "  <h3 id=\"$status\">Patches $status_note</h3>\n";
+	print "  {#patch_list_$status#}\n";
+	print "</div>\n";
+	print ":##}\n";
+
+	print "{#patch_summary#:\n";
+	print "  <li><a href=\"#$status\">$status_note</a> (<get-var n_$status />)</li>\n";
+	print ":##}\n";
 }
-close CMD;
 
-foreach (@status_list) {
-  my $status_note = $_;
+sub parse_patchdir($)
+{
+	my $patchdir = shift;
 
-  $status_note =~ tr/_/ /;
+	foreach (@status_list) {
+		print_status_counter($_);
+	}
 
-  print "{#patch_toc#:<toc-entry href=\"#$_\">$status_note</toc-entry>:##}\n";
+	open CMD, "find $patchdir/ -name '*.patch' | sort |";
+	while (<CMD>) {
+		chomp;
 
-  print "{#patch_list#:\n";
-  print "<div class=\"patches_$_\">\n";
-  print "  <h3 id=\"$_\">Patches $status_note</h3>\n";
-  print "  {#patch_list_$_#}\n";
-  print "</div>\n";
-  print ":##}\n";
+		my $patch = $_;
+		$patch =~ s/^\.\///;
+		my $title = $_;
+		$title =~ s/^$patchdir\///;
 
-  print "{#patch_summary#:\n";
-  print "  <li><a href=\"#$_\">$status_note</a> (<get-var n_$_ />)</li>\n";
-  print ":##}\n";
+		system "$scriptdir/patch2wml '$patch' '$title'";
+	}
+	close CMD;
+
+	foreach (@status_list) {
+		print_status_summary($_);
+	}
 }
+
+parse_patchdir($patchdir);
 
