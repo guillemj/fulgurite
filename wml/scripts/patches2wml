@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 #
-# patches2wml patchdir
+# patches2wml <patchdir>
 #
-#	Generates a wml list of patches in rfc822 format from patchdir.
-#	The patch title is the patch filename with the patchdir stripped.
+# Generates a wml list of patches in rfc822 format from patchdir.
 #
 # Copyright (C) 2003-2005, 2007-2008 Guillem Jover <guillem@hadrons.org>
 #

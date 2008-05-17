@@ -2,7 +2,7 @@
 #
 # news2wml
 #
-#	Convert a news to a wml snippet
+# Convert a news to a wml snippet.
 #
 # Copyright (C) 2002, 2003, 2004  Guillem Jover <guillem@hadrons.org>
 #
