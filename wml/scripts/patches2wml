@@ -15,11 +15,81 @@
 
 use warnings;
 use strict;
+use Digest::MD5 qw(md5_hex);
 
-my $scriptdir = "~/web/wml/scripts";
 my $patchdir = $ARGV[0];
 
+my @excluded_fields = ("Author");
 my @status_list = ("not_sent", "sent", "applied", "fixed", "rejected", "unknown");
+
+sub parse_patch($$)
+{
+	my $filename = shift;
+	my $title = shift;
+	my $patchname = md5_hex($filename);
+	my $status = "unknown";
+
+	print "{#patch_$patchname#:\n";
+	print "  <patch>\n";
+	print "    <patch-title href=\"$filename\">$title</patch-title>\n";
+	print "    <patch-description>\n";
+
+	my $prev_field = "empty";
+
+	open(INFILE, $filename) or die "Cannot open $filename: $!";
+
+	line: while (<INFILE>) {
+		chomp;
+		s/&/&amp;/g;
+		s/</&lt;/g;
+		s/>/&gt;/g;
+
+		# End of RFC822 header data
+		last if !length;
+
+		if ($prev_field eq "Description" and /^ /) {
+			s/^ \./<br \/>/;
+			s/([.:])$/$1<br \/>/;
+			print $_, "\n";
+		} elsif (/^([^: ]*): *(.*)$/) { # Split the line
+			my $field = $1;
+			my $content = $2;
+
+			# Don't show excluded fields
+			next line if grep(/$field/, @excluded_fields);
+
+			if ($field eq "Status") {
+				($status = $content) =~ tr/- A-Z/__a-z/;
+			}
+
+			if ($field eq "Debbug") {
+				$content = "<debbug $content>";
+			}
+
+			print "</li>\n" if ($prev_field ne "empty");
+			print "      <li><strong>$field: $content</strong>";
+
+			print " <br />\n" if ($field eq "Description");
+
+			$prev_field = $field;
+		} else {
+			last if !defined $1;
+		}
+	}
+
+	close INFILE;
+
+	print "      </li>\n" if ($prev_field ne "empty");
+	print "    </patch-description>\n";
+	print "  </patch>\n";
+	print "\n";
+	print ":##}\n";
+
+	print "<increment n_$status />\n";
+	print "{#patch_list_$status#:\n";
+	print "  {#patch_$patchname#}\n";
+	print ":##}\n";
+}
 
 sub print_status_counter($)
 {
@@ -68,7 +138,7 @@ sub parse_patchdir($)
 		my $title = $_;
 		$title =~ s/^$patchdir\///;
 
-		system "$scriptdir/patch2wml '$patch' '$title'";
+		parse_patch($patch, $title);
 	}
 	close CMD;
 
