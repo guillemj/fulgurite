@@ -17,8 +17,6 @@ use warnings;
 use strict;
 use Digest::MD5 qw(md5_hex);
 
-my $patchdir = $ARGV[0];
-
 my @excluded_fields = ("Author");
 my @status_list = ("not_sent", "sent", "applied", "fixed", "rejected", "unknown");
 
@@ -147,5 +145,11 @@ sub parse_patchdir($)
 	}
 }
 
-parse_patchdir($patchdir);
+my $patchdir = $ARGV[0];
+
+if (-d $patchdir) {
+	parse_patchdir($patchdir);
+} else {
+	die "Argument '$patchdir' is not a directory: $!";
+}
 
