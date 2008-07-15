@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use Digest::MD5 qw(md5_hex);
 
-my @excluded_fields = ("Author");
+my @excluded_fields = ("Author", "From", "Date");
 my @status_list = ("not_sent", "sent", "applied", "fixed", "rejected", "unknown");
 
 sub parse_patch($$)
@@ -25,6 +25,7 @@ sub parse_patch($$)
 	my $title = shift;
 	my $patchname = md5_hex($filename);
 	my $status = "unknown";
+	my $format = "old";
 
 	print "{#patch_$patchname#:\n";
 	print "  <patch>\n";
@@ -44,7 +45,9 @@ sub parse_patch($$)
 		# End of RFC822 header data
 		last if !length;
 
-		if ($prev_field eq "Description" and /^ /) {
+		if (/^From /) {
+			$format = "git";
+		} elsif ($prev_field eq "Description" and /^ /) {
 			s/^ \./<br \/>/;
 			s/([.:])$/$1<br \/>/;
 			print $_, "\n";
@@ -54,6 +57,13 @@ sub parse_patch($$)
 
 			# Don't show excluded fields
 			next line if grep(/$field/, @excluded_fields);
+
+			if ($format eq "git") {
+				if ($field eq "Subject") {
+					$field = "Description";
+					$content =~ s/\[PATCH\] //;
+				}
+			}
 
 			if ($field eq "Status") {
 				($status = $content) =~ tr/- A-Z/__a-z/;
