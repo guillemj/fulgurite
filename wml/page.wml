@@ -36,7 +36,7 @@
   <div class="page-timestamp">
   {#scm_id#}
   Page last built on <get-var WML_GEN_ISOTIME>.
-  <div>
+  </div>
 </define-tag>
 
 <define-tag page-copyright>
