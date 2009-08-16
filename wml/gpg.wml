@@ -1,0 +1,7 @@
+<define-tag gpg-key>
+<a href="guillem-%0.asc">GPG public key</a> (keyid %0, stats:
+<a href="http://www.cs.uu.nl/~henkp/henkp/pgp/pathfinder/mk_path.cgi?STAT=%0">pathfinder</a>,
+<a href="http://keyserver.kjsl.com/~jharris/ka/current/<substring "%0" 0 2 />/%0">ka</a>,
+<a href="http://webware.lysator.liu.se/jc/wotsap/wots/latest/keystatistics/0x%0.txt">wotsap</a>);;; Avoid trailing space
+</define-tag>
+
