@@ -51,7 +51,7 @@ sub parse_patch($$)
 			s/^ \./<br \/>/;
 			s/([.:])$/$1<br \/>/;
 			print $_, "\n";
-		} elsif (/^([^: ]*): *(.*)$/) { # Split the line
+		} elsif (/^([^ +-][^: ]*): *(.*)$/) { # Split the line
 			my $field = $1;
 			my $content = $2;
 
