@@ -1,4 +1,5 @@
 #use wml::xhtml2
+#use wml::format
 
 #use wml::header
 
