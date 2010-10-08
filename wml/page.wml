@@ -48,7 +48,6 @@
 <define-tag page-footer-tmpl>
   <div class="page-footer">
     {#page_footer#}
-    <page-valid>
     <page-timestamp>
     <page-copyright>
   </div>
