@@ -67,7 +67,7 @@ sub parse_patch($$)
 			if ($format eq "git") {
 				if ($field eq "Subject") {
 					$field = "Description";
-					$content =~ s/\[PATCH\] //;
+					$content =~ s/\[PATCH.*\] //;
 				}
 			}
 
