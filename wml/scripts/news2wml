@@ -64,4 +64,3 @@ close INFILE;
 
 print '</news-entry>' if ($entry);
 print '</news>';
-

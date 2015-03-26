@@ -167,4 +167,3 @@ if (-d $patchdir) {
 } else {
 	die "Argument '$patchdir' is not a directory: $!";
 }
-
