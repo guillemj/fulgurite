@@ -1,0 +1,7 @@
+<define-tag webid>
+  {#head_link#:
+  <link rel="alternate" type="text/turtle" href="%0"/>
+  :##}
+</define-tag>
+
+$(profile:+<webid "$(profile)">)

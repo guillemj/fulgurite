@@ -11,7 +11,9 @@
   <meta name="Language" content="<:=$LANGUAGE:>" />
   <meta name="Generator" content="WML $(WML_VERSION)" />
   <meta name="Author" content="$(webmaster_name)" />
+  {#head_meta#}
   <link rev="made" href="mailto:$(webmaster_mail)" />
   <link rel="stylesheet" type="text/css" href="$(wml_stylesheet)" />
+  {#head_link#}
 </head>
 <body>
