@@ -31,5 +31,5 @@
 </define-tag>
 
 <define-tag debbug>
-<a href="http://bugs.debian.org/%0">%0</a>
+<a href="https://bugs.debian.org/%0">%0</a>
 </define-tag>

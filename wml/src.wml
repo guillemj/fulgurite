@@ -1,9 +1,9 @@
 <define-tag url_GPL>
-<a href="http://www.gnu.org/licenses/gpl.html">GPL</a>
+<a href="https://www.gnu.org/licenses/gpl.html">GPL</a>
 </define-tag>
 
 <define-tag url_NASM>
-<a href="http://nasm.sf.net/">NASM</a>
+<a href="http://www.nasm.us/">NASM</a>
 </define-tag>
 
 <define-tag download>
