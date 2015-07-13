@@ -16,13 +16,20 @@ use warnings;
 use strict;
 use Digest::MD5 qw(md5_hex);
 
-my @excluded_fields = (
-	"Author", "From", "Date", "Content-Type", "Content-Transfer-Encoding",
-	"MIME-Version"
+my @excluded_fields = qw(
+	Author From Date Content-Type Content-Transfer-Encoding MIME-Version
 );
-my @status_list = (
-	"not_sent", "sent", "applied", "fixed", "obsolete", "rejected",
-	"unknown"
+my @status_list = qw(
+	not_sent sent applied fixed obsolete rejected unknown
+);
+my %status_info = (
+	not_sent => 'Patches not sent',
+	sent => 'Patches sent',
+	applied => 'Patches applied',
+	fixed => 'Patches modified or fixed in a different way',
+	obsolete => 'Patches made obsolete by other changes or project bitrot',
+	rejected => 'Patches rejected',
+	unknown => 'Unknown',
 );
 
 sub parse_patch($$)
@@ -114,23 +121,24 @@ sub print_status_counter($)
 sub print_status_summary($)
 {
 	my $status = shift;
-	my $status_note = $status;
+	my $status_name = $status;
+	my $status_note = $status_info{$status};
 
-	$status_note =~ tr/_/ /;
+	$status_name =~ tr/_/ /;
 
 	print "{#patch_toc#:\n";
-	print "<toc-entry href=\"#$status\">$status_note</toc-entry>\n";
+	print "<toc-entry href=\"#$status\">$status_name ($status_note)</toc-entry>\n";
 	print ":##}\n";
 
 	print "{#patch_list#:\n";
 	print "<div class=\"patches_$status\">\n";
-	print "  <h3 id=\"$status\">Patches $status_note</h3>\n";
+	print "  <h3 id=\"$status\">Patches $status_name</h3>\n";
 	print "  {#patch_list_$status#}\n";
 	print "</div>\n";
 	print ":##}\n";
 
 	print "{#patch_summary#:\n";
-	print "  <li><a href=\"#$status\">$status_note</a> (<get-var n_$status />)</li>\n";
+	print "  <li><a href=\"#$status\">$status_note</a> [$status_name] (<get-var n_$status />)</li>\n";
 	print ":##}\n";
 }
 
