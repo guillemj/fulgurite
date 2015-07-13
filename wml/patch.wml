@@ -29,7 +29,3 @@
     %body
   </ul></div>
 </define-tag>
-
-<define-tag debbug>
-<a href="https://bugs.debian.org/%0">%0</a>
-</define-tag>
