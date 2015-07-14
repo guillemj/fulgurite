@@ -1,4 +1,4 @@
-<define-tag debpkg>
+<define-tag debpkg whitespace=delete>
 <a href="https://tracker.debian.org/%0">%0</a>
 </define-tag>
 
