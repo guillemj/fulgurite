@@ -1,0 +1,17 @@
+  <div class="page-footer">
+    <tmpl_var name=web_footer>
+    <tmpl_if name=feed_url_basename>
+    <div class="page-feed">
+      <a href="<tmpl_var feed_path_basename>.atom" class="feed">Page subscription feed</a>.
+    </div>
+    </tmpl_if>
+    <div class="page-timestamp">
+      Page last built on <tmpl_var name=web_gen_isotime><tmpl_if web_url_vcs>, from
+      <a href="<tmpl_var name=web_url_vcs><tmpl_var name=web_filename>">source</a></tmpl_if>.
+    </div>
+    <div class="page-copyright">
+      Copyright &copy; <tmpl_var name=author_copyright> <tmpl_var name=author_name>
+    </div>
+  </div>
+</body>
+</html>

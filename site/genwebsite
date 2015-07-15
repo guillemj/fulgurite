@@ -1,0 +1,384 @@
+#!/usr/bin/perl
+#
+# genwebsite <file.mdwn>
+#
+# Generates an HTML file from a MultiMarkdown file.
+#
+# Copyright © 2014-2015  Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+use strict;
+use warnings;
+
+use Getopt::Long qw(:config posix_default no_ignorecase);
+use Config::Tiny;
+use Encode qw(encode);
+use Time::Piece;
+use POSIX qw(strftime);
+use Cwd qw(cwd);
+use File::Spec::Functions qw(abs2rel);
+use File::Find;
+use File::Basename;
+use Text::MultiMarkdown;
+use HTML::Template;
+
+# Global variables.
+
+my $PROGRAM = 'genwebsite';
+my $VERSION = '0.0.1';
+
+my %langs = (
+    ca => 'Catalan',
+    es => 'Spanish',
+    en => 'English',
+);
+
+# Configurable settings.
+
+my $conf = Config::Tiny->read('.website.conf', 'utf8');
+
+my $author_name = $conf->{author}->{name};
+my $author_mail = $conf->{author}->{mail};
+my $author_copyright = $conf->{author}->{copyright};
+
+my $web_locale = $conf->{website}->{locale};
+my $web_url_vcs = $conf->{website}->{url_vcs};
+my $web_url_root = $conf->{website}->{url_root};
+my $web_stylesheet = $conf->{website}->{stylesheet};
+my $web_gen_isotime = strftime('%F %T', localtime);
+
+my %keyword = %{$conf->{keywords}};
+
+# Functions.
+
+sub time2rfc3339 {
+    my (@ts) = (@_);
+
+    return strftime('%FT%T%z', @ts) =~ s/..$/:$&/r;
+}
+
+sub slurp_file {
+    my $file = shift;
+
+    local $/;
+    open my $fh, '<:encoding(utf8)', $file or die "error opening file $file: $!\n";
+    my $data = <$fh>;
+    close $fh;
+
+    return $data;
+}
+
+sub dump_file {
+    my ($file, $data) = @_;
+
+    open my $fh, '>', $file or die "error opening file $file: $!\n";
+    print { $fh } $data;
+    close $fh;
+}
+
+sub parse_mdwn {
+    my $file = shift;
+    my $data = slurp_file($file);
+
+    my ($filename, $dirname, $suffix) = fileparse($file, qr/\.[^.]+$/);
+
+    # Split markdown metadata and text.
+    my %meta = (
+        pathname => $file,
+        filename => $filename,
+        dirname => $dirname,
+        mtime => (stat $file)[9],
+        title => ucfirst $filename,
+    );
+    my $text = '';
+
+    my $inmetadata = 1;
+    my $key = '';
+    foreach my $line (split /\n/, $data) {
+        if ($line =~ /^\s*$/) {
+            $inmetadata = 0;
+        }
+
+        if ($inmetadata and $line =~ /^([a-zA-Z0-9][0-9a-zA-Z _-]+?):\s*(.*)$/) {
+            $key = lc $1;
+            $key =~ s/  / /g;
+            $meta{$key} = defined $2 ? $2 : '';
+        } elsif ($inmetadata) {
+            if ($key eq '') {
+                $inmetadata = 0;
+                $text .= "$line\n";
+                next;
+            }
+
+            if ($line =~ /^\s+(.+)$/) {
+                $meta{$key} .= "\n$1";
+            }
+        } else {
+            $text .= "$line\n";
+        }
+    }
+
+    if ($meta{date}) {
+        my $t;
+
+        eval {
+            $t = Time::Piece->strptime($meta{date}, '%Y-%m-%d');
+            $meta{mtime} = $t->epoch;
+        } or do {
+            warn "$PROGRAM: cannot parse '$meta{date}'";
+        };
+    }
+
+    my $mdwn = { meta => \%meta, text => $text };
+
+    return $mdwn;
+}
+
+sub subst_keyword {
+    my ($key, $value) = @_;
+
+    if (exists $keyword{$key}) {
+        my $str = $keyword{$key};
+        $str =~ s/%0/$value/g;
+        return $str;
+    } else {
+        return "$key:$value";
+    }
+}
+
+sub render_mdwn {
+    my $mdwn = shift;
+    my $text = $mdwn->{text};
+
+    # Overlay some useful markup on top of Markdown:
+    # - Replace special <URL:url> markup.
+    $text =~ s{<URL:([^>]+)>}{[$1]($1)}g;
+    # - Replace user-defined keywords.
+    $text =~ s{((?:[A-Z][a-z]+){2,}):([A-Za-z0-9_+-]+)}{subst_keyword($1, $2)}eg;
+
+    # Render the actual Markdown into HTML.
+    my $m = Text::MultiMarkdown->new(
+        use_wikilinks => 1,
+        use_metadata => 0,
+        strip_metadata => 0,
+        heading_ids => 0,
+    );
+    $mdwn->{html} = $m->markdown($text);
+}
+
+sub render_tmpl {
+    my ($tmplfile, $tmplparams) = @_;
+
+    my %params = (
+        author_name => $author_name,
+        author_mail => $author_mail,
+        author_copyright => $author_copyright,
+        web_gen_program => $PROGRAM,
+        web_gen_version => $VERSION,
+        web_gen_isotime => $web_gen_isotime,
+        web_charset => 'utf-8',
+        web_locale => $web_locale,
+        web_language => $langs{$web_locale},
+        web_url_root => $web_url_root,
+        web_url_vcs => $web_url_vcs,
+        %{$tmplparams},
+    );
+
+    my %tmplopts = (
+        die_on_bad_params => 0,
+        loop_context_vars => 1,
+        global_vars => 1,
+        filename => $tmplfile,
+        utf8 => 1,
+    );
+    my $tmpl = HTML::Template->new(%tmplopts);
+    $tmpl->param(\%params);
+
+    my $html;
+    eval {
+        $html = $tmpl->output();
+        $html =~ s/^\s+\n^//gm;
+    } or do {
+        die "error: $tmplfile: $@";
+    };
+
+    return encode('UTF-8', $html);
+}
+
+sub render_toc {
+    my $mdwn = shift;
+
+    return $mdwn->{meta}->{toc} //
+           '<span class="toc-home">' .
+           '<a href="' . $mdwn->{meta}->{home} . '">Home</a>' .
+           '</span>' .
+           '<span class="toc-title">' . $mdwn->{meta}->{title} . '</span>';
+}
+
+sub render_page {
+    my ($mdwn, $tmplfile) = @_;
+
+    $mdwn->{meta}->{home} = abs2rel(".", $mdwn->{meta}->{dirname});
+
+    my %params = (
+        web_filename => $mdwn->{meta}->{pathname},
+        web_stylesheet => abs2rel($web_stylesheet, $mdwn->{meta}->{dirname}),
+        web_title => $mdwn->{meta}->{title},
+        web_home => $mdwn->{meta}->{home},
+        web_toc => render_toc($mdwn),
+        web_content => $mdwn->{html},
+        webid => $mdwn->{meta}->{webid},
+    );
+
+    if ($mdwn->{meta}->{css}) {
+        $params{head_link} = "<link rel=\"stylesheet\" type=\"text/css\" href=\"$mdwn->{meta}->{css}\" />";
+    }
+
+    return render_tmpl($tmplfile, \%params);
+}
+
+sub render_feed {
+    my ($feed_params, $mdwn_feed, $tmplfile) = @_;
+
+    my %params = (
+        %{$feed_params},
+    );
+
+    my @entry_params;
+    foreach my $entry (@{$mdwn_feed}) {
+        my $basename = "$entry->{meta}->{dirname}$entry->{meta}->{filename}";
+
+        my %entry_params = (
+            entry_path_basename => abs2rel($basename, $params{feed_dirname}),
+            entry_url_basename => "$web_url_root$basename",
+            entry_isotime => time2rfc3339(localtime $entry->{meta}{mtime}),
+            entry_isodate => strftime('%F', localtime $entry->{meta}{mtime}),
+            entry_title => $entry->{meta}->{title},
+            entry_id => "urn:uuid:$entry->{meta}->{uuid}",
+            entry_tags => [ map { {
+                tag_path_basename => abs2rel("$params{feed_root}/tags/$_", $params{feed_dirname}),
+                tag => $_,
+            } } split ' ', $entry->{meta}->{tags} ],
+            entry_text => $entry->{html},
+        );
+
+        push @entry_params, \%entry_params;
+    }
+    $params{entry} = \@entry_params;
+
+    return render_tmpl($tmplfile, \%params);
+}
+
+sub render_chan {
+    my ($mdwn, $mdwn_feed, $basepath, $basename) = @_;
+
+    my %atom_params = (
+        feed_root => $mdwn->{meta}->{feed_root},
+        feed_dirname => $basepath,
+        feed_url_basename => "$web_url_root$basename",
+        feed_gen_isotime => time2rfc3339(localtime),
+        feed_id => "urn:uuid:$mdwn->{meta}->{uuid}",
+        feed_title => $mdwn->{meta}->{feed_title},
+    );
+    my $atom = render_feed(\%atom_params, $mdwn_feed, 'site/atom-feed.tmpl');
+    dump_file("$basename.atom", $atom);
+
+    $mdwn->{meta}->{home} = abs2rel(".", $basepath);
+
+    my %html_params = (
+        feed_root => $mdwn->{meta}->{feed_root},
+        feed_dirname => $basepath,
+        feed_url_basename => "$web_url_root$basename",
+        feed_path_basename => abs2rel($basename, $basepath),
+        web_filename => $mdwn->{meta}->{pathname},
+        web_stylesheet => abs2rel($web_stylesheet, $basepath),
+        web_title => $mdwn->{meta}->{feed_title},
+        web_home => $mdwn->{meta}->{home},
+        web_toc => render_toc($mdwn),
+    );
+    my $html = render_feed(\%html_params, $mdwn_feed, 'site/html-feed.tmpl');
+    dump_file("$basename.html", $html);
+}
+
+# Main program.
+
+my %options = (
+    'render-mdwn' => 1,
+    'template' => 'site/html-page.tmpl',
+    'mode' => 'page',
+);;
+my @options_spec = (
+    'render-mdwn!',
+    'template=s',
+    'mode=s',
+);
+
+GetOptions(\%options, @options_spec);
+
+if ($options{mode} eq 'page') {
+    my $filename = $ARGV[0];
+
+    my $mdwn = parse_mdwn($filename);
+
+    if ($options{'render-mdwn'}) {
+        render_mdwn($mdwn)
+    } else {
+        $mdwn->{html} = $mdwn->{text};
+    }
+    print render_page($mdwn, $options{'template'});
+} elsif ($options{mode} eq 'feed') {
+    my $pathname = $ARGV[0];
+
+    my @mdwn_feed;
+
+    # Scan pathname and parse all found mdwn files.
+    my $scan_mdwn = sub {
+        if (m/\.mdwn$/) {
+            return if m/index\.mdwn$/;
+
+            my $basename = $File::Find::name =~ s/\.mdwn$//r;
+
+            my $mdwn = parse_mdwn($File::Find::name);
+            render_mdwn($mdwn);
+
+            my $html = render_page($mdwn, 'site/html-page.tmpl');
+            dump_file("$basename.html", $html);
+
+            push @mdwn_feed, $mdwn;
+        }
+    };
+    find({ no_chdir => 1, wanted => $scan_mdwn }, $pathname);
+
+    # Sort @mdwn_feed per date.
+    @mdwn_feed = reverse sort {
+        $a->{meta}->{mtime} <=> $b->{meta}->{mtime}
+    } @mdwn_feed;
+
+    # Create an aggregated .html and .atom file for all.
+    my $mdwn = parse_mdwn("$pathname/index.mdwn");
+    $mdwn->{meta}->{feed_root} = $pathname;
+
+    $mdwn->{meta}->{feed_title} = $mdwn->{meta}->{title};
+    render_chan($mdwn, \@mdwn_feed, $pathname, "$pathname/index");
+
+    # Create a tags dir with aggregated .atom per tag.
+    # Filter @mdwn_feed per $tag and render_feed into $pathname/tags/$tag.atom.
+    my $web_dir_tags = "$pathname/tags";
+    mkdir $web_dir_tags;
+
+    my %tags = map { $_ => 1 } map { split ' ', $_->{meta}->{tags} } @mdwn_feed;
+    foreach my $tag (keys %tags) {
+        my @mdwn_tag = grep { $_->{meta}->{tags} =~ m/\b$tag\b/ } @mdwn_feed;
+
+        # feed_id => "urn:uuid:$mdwn->{meta}->{uuid}", # XXX syntethize it?
+        $mdwn->{meta}->{feed_title} = "$mdwn->{meta}->{title} - Tag $tag";
+        render_chan($mdwn, \@mdwn_tag, $web_dir_tags, "$web_dir_tags/$tag");
+    }
+}
+
+1;

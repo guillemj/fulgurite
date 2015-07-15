@@ -1,0 +1,224 @@
+#!/usr/bin/perl
+#
+# genpatches <patchdir>
+#
+# Generates a mdwn list of patches in rfc822 format from <patchdir>.
+#
+# Copyright © 2003-2015 Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+use warnings;
+use strict;
+
+my @excluded_fields = qw(
+    author from date content-type content-transfer-encoding mime-version
+    index in-reply-to message-id references
+);
+my @status_list = qw(
+    not-sent sent applied fixed obsolete rejected unknown
+);
+my %status_info = (
+    'not-sent' => 'Patches not sent',
+    'sent' => 'Patches sent',
+    'applied' => 'Patches applied',
+    'fixed' => 'Patches modified or fixed in a different way',
+    'obsolete' => 'Patches made obsolete by other changes or project bitrot',
+    'rejected' => 'Patches rejected',
+    'unknown' => 'Unknown',
+);
+
+sub parse_patch
+{
+    my ($filename, $title) = @_;
+
+    my %patch = (
+        filename => $filename,
+        title => $title,
+        format => 'old',
+    );
+    $patch{meta}{status} = 'unknown';
+    $patch{meta}{summary} = '';
+    $patch{meta}{summary_next} = '';
+
+    my $prev_k = '';
+
+    open my $infile, $filename or die "Cannot open $filename: $!";
+
+    LINE: while (<$infile>) {
+        chomp;
+
+        s/&/&amp;/g;
+        s/</&lt;/g;
+        s/>/&gt;/g;
+
+        # End of RFC822 header data.
+        last if not length;
+
+        if (/^From /) {
+            $patch{format} = 'git';
+        } elsif ($prev_k eq 'summary' and /^ /) {
+            s/\s+$//;
+            s/^ //;
+            s/^\.//;
+            $patch{meta}{summary_next} .= "$_\n";
+        } elsif (/^([^ +-][^: ]*): *(.*)$/) { # Split the line
+            my ($k, $v) = (lc $1, $2);
+
+            # Ignore excluded fields.
+            next LINE if grep /$k/, @excluded_fields;
+
+            if ($k eq 'subject' and $patch{format} eq 'git') {
+                $k = 'summary';
+                $v =~ s/\[PATCH.*\] *//;
+            }
+            if ($k eq 'description') {
+                $k = 'summary';
+            }
+
+            if ($k eq 'status') {
+                $v =~ tr/ A-Z/_a-z/;
+            }
+
+            if ($k eq 'package' or $v eq 'source') {
+                $v = "<a href=\"https://tracker.debian.org/$v\">$v</a>";
+            }
+
+            if ($k eq 'bug-debian') {
+                $k = 'Debbug';
+                $v =~ s{https?://bugs.debian.org/}{};
+            }
+            if ($k eq 'debbug') {
+                $v = "<a href=\"https://bugs.debian.org/$v\">$v</a>";
+            }
+
+            $patch{meta}{$k} = $v;
+            $prev_k = $k;
+        } else {
+            last if not defined $1;
+        }
+    }
+
+    close $infile;
+
+    return \%patch;
+}
+
+sub parse_patchdir
+{
+    my $patchdir = shift;
+    my @patches;
+
+    open my $cmd, "find $patchdir/ -name '*.patch' | sort |";
+    while (<$cmd>) {
+        chomp;
+
+        my $patchname = $_;
+        $patchname =~ s/^\.\///;
+        my $title = $_;
+        $title =~ s/^$patchdir\///;
+
+        push @patches, parse_patch($patchname, $title);
+    }
+    close $cmd;
+
+    return @patches;
+}
+
+sub print_status_summary
+{
+    my (@patches) = @_;
+
+    print "<h2>Patch summary</h2>\n";
+    print "\n";
+
+    print "<ul class=\"patch-summary\">\n";
+    foreach my $status (@status_list) {
+        my $status_name = $status;
+        $status_name =~ tr/_-/  /;
+        my $status_note = $status_info{$status};
+        my $status_count = scalar grep { $_->{meta}{status} eq $status } @patches;
+
+        print "<li><a href=\"#$status\">$status_note</a> [$status_name] ($status_count)</li>\n"
+    }
+    print "</div>\n";
+    print "\n";
+}
+
+sub print_patch
+{
+    my $patch = shift;
+
+    print "  <div class=\"patch\">\n";
+    print "    <div class=\"patch-title\">\n";
+    print "      <strong><a href=\"$patch->{filename}\">$patch->{title}</a></strong>\n";
+    print "    </div>\n";
+
+    print "    <div class=\"patch-meta\"><ul>\n";
+    foreach my $k (sort keys %{$patch->{meta}}) {
+        my $field = ucfirst $k;
+        if ($k eq 'summary') {
+            print "      <li><strong>$field:</strong> $patch->{meta}{summary}\n";
+            print "          <pre>$patch->{meta}{summary_next}</pre></li>\n";
+        } elsif ($k eq 'summary_next') {
+            next;
+        } else {
+            print "      <li><strong>$field: $patch->{meta}{$k}</strong></li>\n";
+        }
+    }
+    print "    </ul></div>\n";
+
+    print "  </div>\n";
+    print "\n";
+}
+
+sub print_patch_list
+{
+    my (@patches) = @_;
+
+    print <<HEADER;
+<h2>Patches list</h2>
+
+You can access the patches as well in <a href="patches/">directory</a> listing.
+
+HEADER
+
+    foreach my $status (@status_list) {
+        my $status_name = $status;
+        $status_name =~ tr/_-/  /;
+
+        print "<div class=\"patches-$status\">\n";
+        print "  <h3 id=\"$status\">Patches $status_name</h3>\n";
+
+        foreach my $patch (grep { $_->{meta}{status} eq $status } @patches) {
+            print_patch($patch);
+        }
+
+        print "</div>\n";
+    }
+}
+
+sub print_patchdir
+{
+    my $patchdir = shift;
+    my @patches = parse_patchdir($patchdir);
+
+    print "Title: Guillem Jover's Patches\n";
+    print "Css: patches.css\n";
+    print "\n";
+
+    print_status_summary(@patches);
+    print_patch_list(@patches);
+}
+
+my $patchdir = $ARGV[0];
+
+if (-d $patchdir) {
+    print_patchdir($patchdir);
+} else {
+    die "Argument '$patchdir' is not a directory: $!";
+}

@@ -1,0 +1,82 @@
+#!/usr/bin/perl
+#
+# news2tmpl
+#
+# Convert a news to a genwebsite template.
+#
+# Copyright © 2002, 2003, 2004  Guillem Jover <guillem@hadrons.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+use warnings;
+use strict;
+
+use HTML::Template;
+
+my $filename = $ARGV[0];
+
+$, = ' ';		# set output field separator
+$\ = "\n";		# set output record separator
+
+my $max_recent = 8;
+my $recent = 0;
+my $entry = 0;
+
+my @news;
+my $news;
+
+exit 0 if not -e $filename;
+
+open my $infile, $filename or die "Cannot open $filename: $!";
+
+while (<$infile>) {
+    # Strip record separator.
+    chomp;
+
+    if (/^\d{4}-\d{2}-\d{2}/) {
+	if ($recent >= $max_recent) {
+	    last;
+	} else {
+	    $recent++;
+	}
+	if ($entry) {
+	    push @news, $news;
+	    $news = {};
+	}
+	$entry = 1;
+	$news->{news_title} = $_;
+	$news->{news_body} = '';
+	next;
+    }
+
+    if (/\.$/) {
+	$news->{news_body} .= $_;
+	$news->{news_body} .= '<br />';
+	next;
+    }
+
+    $news->{news_body} .= $_;
+
+    push @news, $news;
+}
+
+close $infile;
+
+my %tmplopts = (
+    die_on_bad_params => 0,
+    loop_context_vars => 1,
+    global_vars => 1,
+    filename => 'site/html-news.tmpl',
+    utf8 => 1,
+);
+my $tmpl = HTML::Template->new(%tmplopts);
+
+$tmpl->param(news_entries => \@news);
+
+print $tmpl->output();
+
+1;

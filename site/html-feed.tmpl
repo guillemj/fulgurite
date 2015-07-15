@@ -1,0 +1,35 @@
+<tmpl_include "html-head.tmpl">
+
+  <div class="page-content">
+  <tmpl_loop entry>
+  <div class="entry">
+    <div class="entry-meta">
+      <h2>
+        <a href="<tmpl_var entry_path_basename>.html"><tmpl_var entry_title></a>
+      </h2>
+      <tmpl_if entry_summary>
+      <div class="entry-summary">
+        <tmpl_var entry_summary>
+      </div>
+      </tmpl_if>
+    </div>
+    <div class="entry-body">
+      <tmpl_var entry_text>
+    </div>
+    <div class="entry-footer">
+      <span class="entry-time">
+        Published on <tmpl_var entry_isodate>;
+      </span>
+      <span class="entry-tags">
+        Tags:<tmpl_loop entry_tags>
+          <a href="<tmpl_var tag_path_basename>.html"><tmpl_var tag></a>
+        </tmpl_loop>
+      </span>
+    </div>
+  </div>
+  </tmpl_loop>
+  </div>
+
+  <hr class="page-separator" />
+
+<tmpl_include "html-tail.tmpl">
