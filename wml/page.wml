@@ -32,10 +32,11 @@
   </div>
 </define-tag>
 
-<define-tag page-timestamp>
-  <div class="page-timestamp">
+<define-tag page-generator>
+  <div class="page-generator">
   {#scm_id#}
-  Page last built on <get-var WML_GEN_ISOTIME>.
+  Page last built on <get-var WML_GEN_ISOTIME>,
+  from <a href="$(wml_source)/<get-var WML_SRC_FILENAME>">source</a>.
   </div>
 </define-tag>
 
@@ -48,7 +49,7 @@
 <define-tag page-footer-tmpl>
   <div class="page-footer">
     {#page_footer#}
-    <page-timestamp>
+    <page-generator>
     <page-copyright>
   </div>
 </define-tag>
