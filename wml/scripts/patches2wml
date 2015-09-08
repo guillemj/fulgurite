@@ -82,6 +82,10 @@ sub parse_patch($$)
 				($status = $content) =~ tr/- A-Z/__a-z/;
 			}
 
+			if ($field eq 'Bug-Debian') {
+				$field = 'Debbug';
+				$content =~ s{https?://bugs.debian.org/}{};
+			}
 			if ($field eq "Debbug") {
 				$content = "<debbug $content>";
 			}
