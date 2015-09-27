@@ -63,8 +63,6 @@ while (<$infile>) {
     }
 
     $news->{news_body} .= $_;
-
-    push @news, $news;
 }
 
 close $infile;
