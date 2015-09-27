@@ -163,12 +163,12 @@ sub render_mdwn {
     my $text = $mdwn->{text};
 
     # Overlay some useful markup on top of MultiMarkdown:
+    # - Replace commands.
+    $text =~ s/{#!([^}]+)}/subst_command($1)/eg;
     # - Replace special <URL:url> markup.
     $text =~ s{<URL:([^>]+)>}{[$1]($1)}g;
     # - Replace user-defined keywords.
     $text =~ s{((?:[A-Z][a-z]+){2,}):([A-Za-z0-9_+-]+)}{subst_keyword($1, $2)}eg;
-    # - Replace commands.
-    $text =~ s/{#!([^}]+)}/subst_command($1)/eg;
 
     # Render the actual Markdown into HTML.
     my $m = Text::MultiMarkdown->new(
