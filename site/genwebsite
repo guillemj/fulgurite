@@ -151,6 +151,12 @@ sub subst_keyword {
     }
 }
 
+sub subst_command {
+    my $command = shift;
+
+    return qx{$command};
+}
+
 sub render_mdwn {
     my $mdwn = shift;
     my $text = $mdwn->{text};
@@ -160,6 +166,8 @@ sub render_mdwn {
     $text =~ s{<URL:([^>]+)>}{[$1]($1)}g;
     # - Replace user-defined keywords.
     $text =~ s{((?:[A-Z][a-z]+){2,}):([A-Za-z0-9_+-]+)}{subst_keyword($1, $2)}eg;
+    # - Replace commands.
+    $text =~ s/{#!([^}]+)}/subst_command($1)/eg;
 
     # Render the actual Markdown into HTML.
     my $m = Text::MultiMarkdown->new(
