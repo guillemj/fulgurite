@@ -54,7 +54,7 @@ while (<$infile>) {
     }
 
     # Remove heading tab.
-    s/^\t//;
+    s/^\t/ /;
 
     if (/\.$/) {
 	$news->{news_body} .= $_;
