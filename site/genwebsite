@@ -41,6 +41,7 @@ my %langs = (
 # Configurable settings.
 
 my $conf = Config::Tiny->read('.website.conf', 'utf8');
+$conf->{keywords} //= {};
 
 my $author_name = $conf->{author}->{name};
 my $author_mail = $conf->{author}->{mail};
