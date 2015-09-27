@@ -161,7 +161,7 @@ sub render_mdwn {
     my $mdwn = shift;
     my $text = $mdwn->{text};
 
-    # Overlay some useful markup on top of Markdown:
+    # Overlay some useful markup on top of MultiMarkdown:
     # - Replace special <URL:url> markup.
     $text =~ s{<URL:([^>]+)>}{[$1]($1)}g;
     # - Replace user-defined keywords.
