@@ -14,13 +14,15 @@
   <link rev="made" href="mailto:<tmpl_var name=author_mail>" />
   <link rel="home" href="<tmpl_var web_home>" title="Home" />
   <link rel="stylesheet" type="text/css" href="<tmpl_var name=web_stylesheet>" />
+  <tmpl_if name="web_stylesheet_local">
+  <link rel="stylesheet" type="text/css" href="<tmpl_var name=web_stylesheet_local>" />
+  </tmpl_if>
   <tmpl_if name="feed_url_basename">
   <link rel="alternate"  type="application/atom+xml" href="<tmpl_var feed_path_basename>.atom" title="Atom feed" />
   </tmpl_if>
   <tmpl_if name="webid">
   <link rel="alternate" type="text/turtle" href="<tmpl_var name=webid>" title="WebID" />
   </tmpl_if>
-  <tmpl_var name=head_link>
 </head>
 <body>
   <tmpl_if name=web_navbar>

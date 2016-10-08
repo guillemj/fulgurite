@@ -230,16 +230,13 @@ sub render_page {
     my %params = (
         web_filename => $mdwn->{meta}->{pathname},
         web_stylesheet => abs2rel($web_stylesheet, $mdwn->{meta}->{dirname}),
+        web_stylesheet_local => $mdwn->{meta}->{css},
         web_title => $mdwn->{meta}->{title},
         web_home => $mdwn->{meta}->{home},
         web_navbar => $mdwn->{meta}->{navbar},
         web_content => $mdwn->{html},
         webid => $mdwn->{meta}->{webid},
     );
-
-    if ($mdwn->{meta}->{css}) {
-        $params{head_link} = "<link rel=\"stylesheet\" type=\"text/css\" href=\"$mdwn->{meta}->{css}\" />";
-    }
 
     return render_tmpl($tmplfile, \%params);
 }
