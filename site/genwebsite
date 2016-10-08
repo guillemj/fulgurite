@@ -136,6 +136,9 @@ sub parse_mdwn {
         };
     }
 
+    $meta{navbar} //= 1;
+    $meta{navbar} = 0 if $meta{navbar} eq 'no' or $meta{navbar} eq 'false';
+
     my $mdwn = { meta => \%meta, text => $text };
 
     return $mdwn;
@@ -219,16 +222,6 @@ sub render_tmpl {
     return encode('UTF-8', $html);
 }
 
-sub render_navbar {
-    my $mdwn = shift;
-
-    return $mdwn->{meta}->{navbar} //
-           '<span class="navbar-home">' .
-           '<a href="' . $mdwn->{meta}->{home} . '">Home</a>' .
-           '</span>' .
-           '<span class="navbar-title">' . $mdwn->{meta}->{title} . '</span>';
-}
-
 sub render_page {
     my ($mdwn, $tmplfile) = @_;
 
@@ -239,7 +232,7 @@ sub render_page {
         web_stylesheet => abs2rel($web_stylesheet, $mdwn->{meta}->{dirname}),
         web_title => $mdwn->{meta}->{title},
         web_home => $mdwn->{meta}->{home},
-        web_navbar => render_navbar($mdwn),
+        web_navbar => $mdwn->{meta}->{navbar},
         web_content => $mdwn->{html},
         webid => $mdwn->{meta}->{webid},
     );
@@ -308,7 +301,7 @@ sub render_chan {
         web_stylesheet => abs2rel($web_stylesheet, $basepath),
         web_title => $mdwn->{meta}->{feed_title},
         web_home => $mdwn->{meta}->{home},
-        web_navbar => render_navbar($mdwn),
+        web_navbar => $mdwn->{meta}->{navbar},
     );
     my $html = render_feed(\%html_params, $mdwn_feed, 'site/html-feed.tmpl');
     dump_file("$basename.html", $html);

@@ -25,6 +25,7 @@
 <body>
   <tmpl_if name=web_navbar>
   <div class="navbar">
-    <tmpl_var name=web_navbar>
+    <span class="navbar-home"><a href="<tmpl_var web_home>">Home</a></span>
+    <span class="navbar-title"><tmpl_var web_title></span>
   </div>
   </tmpl_if>
