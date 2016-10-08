@@ -92,6 +92,7 @@ sub parse_mdwn {
     my %meta = (
         pathname => $file,
         filename => $filename,
+        basename => "$dirname/$filename",
         dirname => $dirname,
         mtime => (stat $file)[9],
         title => ucfirst $filename,
@@ -343,23 +344,18 @@ if ($options{mode} eq 'page') {
     my $pathname = $ARGV[0];
 
     my @mdwn_feed;
+    my @mdwn_html;
 
     # Scan pathname and parse all found mdwn files.
     my $scan_mdwn = sub {
         if (m/\.mdwn$/) {
             return if m/index\.mdwn$/;
 
-            my $basename = $File::Find::name =~ s/\.mdwn$//r;
-
             my $mdwn = parse_mdwn($File::Find::name);
             render_mdwn($mdwn);
 
-            my $html = render_page($mdwn, 'site/html-page.tmpl');
-            dump_file("$basename.html", $html);
-
-            return if $mdwn->{meta}->{tags} =~ m/\bdraft\b/;
-
-            push @mdwn_feed, $mdwn;
+            push @mdwn_html, $mdwn;
+            push @mdwn_feed, $mdwn if $mdwn->{meta}->{tags} !~ m/\bdraft\b/;
         }
     };
     find({ no_chdir => 1, wanted => $scan_mdwn }, $pathname);
@@ -368,6 +364,12 @@ if ($options{mode} eq 'page') {
     @mdwn_feed = reverse sort {
         $a->{meta}->{mtime} <=> $b->{meta}->{mtime}
     } @mdwn_feed;
+
+    # Create all individual .html entries.
+    foreach my $mdwn (@mdwn_feed) {
+        my $html = render_page($mdwn, $options{'template'});
+        dump_file("$mdwn->{meta}->{basename}.html", $html);
+    }
 
     # Create an aggregated .html and .atom file for all.
     my $mdwn = parse_mdwn("$pathname/index.mdwn");
