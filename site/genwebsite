@@ -4,7 +4,7 @@
 #
 # Generates an HTML file from a MultiMarkdown file.
 #
-# Copyright © 2014-2016  Guillem Jover <guillem@hadrons.org>
+# Copyright © 2014-2017  Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@ use warnings;
 
 use Getopt::Long qw(:config posix_default no_ignorecase);
 use Config::Tiny;
-use Encode qw(encode);
 use Time::Piece;
 use POSIX qw(strftime);
 use Cwd qw(cwd);
@@ -25,7 +24,7 @@ use File::Spec::Functions qw(abs2rel);
 use File::Find;
 use File::Basename;
 use Text::MultiMarkdown;
-use HTML::Template;
+use Template;
 
 # Global variables.
 
@@ -67,7 +66,7 @@ sub slurp_file {
     my $file = shift;
 
     local $/;
-    open my $fh, '<:encoding(utf8)', $file or die "error opening file $file: $!\n";
+    open my $fh, '<', $file or die "error opening file $file: $!\n";
     my $data = <$fh>;
     close $fh;
 
@@ -202,24 +201,17 @@ sub render_tmpl {
     );
 
     my %tmplopts = (
-        die_on_bad_params => 0,
-        loop_context_vars => 1,
-        global_vars => 1,
-        filename => $tmplfile,
-        utf8 => 1,
+        INTERPOLATE => 1,
+        INCLUDE_PATH => 'site:.',
     );
-    my $tmpl = HTML::Template->new(%tmplopts);
-    $tmpl->param(\%params);
+    my $tmpl = Template->new(%tmplopts);
 
     my $html;
-    eval {
-        $html = $tmpl->output();
-        $html =~ s/^\s+\n^//gm;
-    } or do {
-        die "error: $tmplfile: $@";
-    };
+    $tmpl->process($tmplfile, \%params, \$html)
+        or die "error: $tmplfile: " . $tmpl->error() . "\n";
+    $html =~ s/^\s+\n^//gm;
 
-    return encode('UTF-8', $html);
+    return $html;
 }
 
 sub render_page {
@@ -268,7 +260,7 @@ sub render_feed {
 
         push @entry_params, \%entry_params;
     }
-    $params{entry} = \@entry_params;
+    $params{entries} = \@entry_params;
 
     return render_tmpl($tmplfile, \%params);
 }

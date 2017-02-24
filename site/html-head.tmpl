@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="<tmpl_var name=web_charset>"?>
+<?xml version="1.0" encoding="[% web_charset %]"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<tmpl_var name=web_locale>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="[% web_locale %]">
 <head>
-  <title><tmpl_var name=web_title></title>
-  <meta http-equiv="Content-Type" content="text/html; charset=<tmpl_var name=web_charset>" />
-  <meta http-equiv="Content-Language" content="<tmpl_var name=web_locale>" />
-  <meta name="Language" content="<tmpl_var name=web_language>" />
-  <meta name="Generator" content="<tmpl_var name=web_gen_program> <tmpl_var name=web_gen_version>" />
-  <meta name="Author" content="<tmpl_var name=author_name>" />
+  <title>[% web_title %]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=[% web_charset %]" />
+  <meta http-equiv="Content-Language" content="[% web_locale %]" />
+  <meta name="Language" content="[% web_language %]" />
+  <meta name="Generator" content="[% web_gen_program %] [% web_gen_version %]" />
+  <meta name="Author" content="[% author_name %]" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <tmpl_var name=head_meta>
-  <link rev="made" href="mailto:<tmpl_var name=author_mail>" />
-  <link rel="home" href="<tmpl_var web_home>" title="Home" />
-  <link rel="stylesheet" type="text/css" href="<tmpl_var name=web_stylesheet>" />
-  <tmpl_if name="web_stylesheet_local">
-  <link rel="stylesheet" type="text/css" href="<tmpl_var name=web_stylesheet_local>" />
-  </tmpl_if>
-  <tmpl_if name="feed_url_basename">
-  <link rel="alternate"  type="application/atom+xml" href="<tmpl_var feed_path_basename>.atom" title="Atom feed" />
-  </tmpl_if>
-  <tmpl_if name="webid">
-  <link rel="alternate" type="text/turtle" href="<tmpl_var name=webid>" title="WebID" />
-  </tmpl_if>
+  [% IF head_meta %][% head_meta %][% END %]
+  <link rev="made" href="mailto:[% author_mail %]" />
+  <link rel="home" href="[% web_home %]" title="Home" />
+  <link rel="stylesheet" type="text/css" href="[% web_stylesheet %]" />
+  [% IF web_stylesheet_local %]
+  <link rel="stylesheet" type="text/css" href="[% web_stylesheet_local %]" />
+  [% END %]
+  [% IF feed_url_basename %]
+  <link rel="alternate"  type="application/atom+xml" href="[% feed_path_basename %].atom" title="Atom feed" />
+  [% END %]
+  [% IF webid %]
+  <link rel="alternate" type="text/turtle" href="[% webid %]" title="WebID" />
+  [% END %]
 </head>
 <body>
-  <tmpl_if name=web_navbar>
+  [% IF web_navbar %]
   <div class="navbar">
-    <span class="navbar-home"><a href="<tmpl_var web_home>">Home</a></span>
-    <span class="navbar-title"><tmpl_var web_title></span>
+    <span class="navbar-home"><a href="[% web_home %]">Home</a></span>
+    <span class="navbar-title">[% web_title %]</span>
   </div>
-  </tmpl_if>
+  [% END %]

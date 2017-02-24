@@ -4,7 +4,7 @@
 #
 # Convert a news to a genwebsite template.
 #
-# Copyright © 2002, 2003, 2004  Guillem Jover <guillem@hadrons.org>
+# Copyright © 2002-2004, 2015, 2017  Guillem Jover <guillem@hadrons.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 use warnings;
 use strict;
 
-use HTML::Template;
+use Template;
 
 my $filename = $ARGV[0];
 
@@ -67,17 +67,18 @@ while (<$infile>) {
 
 close $infile;
 
+my $tmplfile = 'site/html-news.tmpl';
 my %tmplopts = (
-    die_on_bad_params => 0,
-    loop_context_vars => 1,
-    global_vars => 1,
-    filename => 'site/html-news.tmpl',
-    utf8 => 1,
+    INTERPOLATE => 1,
+    INCLUDE_PATH => 'site:.',
 );
-my $tmpl = HTML::Template->new(%tmplopts);
+my $tmpl = Template->new(%tmplopts);
 
-$tmpl->param(news_entries => \@news);
+my $params = {
+  news_entries => \@news,
+};
 
-print $tmpl->output();
+$tmpl->process($tmplfile, $params)
+    or die "error: $tmplfile: " . $tmpl->error() . "\n";
 
 1;

@@ -1,37 +1,40 @@
-<?xml version="1.0" encoding="<tmpl_var web_charset>"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="<tmpl_var web_locale>">
-  <title><tmpl_var feed_title></title>
-  <tmpl_if feed_subtitle><subtitle><tmpl_var feed_subtitle></subtitle></tmpl_if>
-  <link href="<tmpl_var feed_url_basename>.atom" rel="self" type="application/atom+xml" />
-  <link href="<tmpl_var feed_url_basename>.html" rel="alternate" type="text/html" />
-  <id><tmpl_var feed_id></id>
-  <generator version="<tmpl_var web_gen_version>"><tmpl_var web_gen_program></generator>
-  <rights>Copyright © <tmpl_var author_copyright> <tmpl_var author_name></rights>
-  <updated><tmpl_var feed_gen_isotime></updated>
+<?xml version="1.0" encoding="[% web_charset %]"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="[% web_locale %]">
+  <title>[% feed_title %]</title>
+  [% IF feed_subtitle %]
+  <subtitle>[% feed_subtitle %]</subtitle>
+  [% END %]
+  <link href="[% feed_url_basename %].atom" rel="self" type="application/atom+xml" />
+  <link href="[% feed_url_basename %].html" rel="alternate" type="text/html" />
+  <id>[% feed_id %]</id>
+  <generator version="[% web_gen_version %]">[% web_gen_program %]</generator>
+  <rights>Copyright © [% author_copyright %] [% author_name %]</rights>
+  <updated>[% feed_gen_isotime %]</updated>
   <author>
-    <name><tmpl_var author_name></name>
-    <email><tmpl_var author_mail></email>
-    <uri><tmpl_var web_url_root></uri>
+    <name>[% author_name %]</name>
+    <email>[% author_mail %]</email>
+    <uri>[% web_url_root %]</uri>
   </author>
 
-  <tmpl_loop entry>
+  [% FOREACH entry IN entries %]
   <entry>
-    <title><tmpl_var entry_title></title>
-    <link href="<tmpl_var entry_url_basename>.html" rel="alternate" type="text/html" />
-    <id><tmpl_var entry_id></id>
-    <updated><tmpl_var entry_isotime></updated>
-    <tmpl_if entry_summary><summary><tmpl_var entry_summary></summary>
-    </tmpl_if>
-    <tmpl_if entry_tags>
-    <tmpl_loop entry_tags>
-      <category term="<tmpl_var tag>" />
-    </tmpl_loop>
-    </tmpl_if>
+    <title>[% entry.entry_title %]</title>
+    <link href="[% entry.entry_url_basename %].html" rel="alternate" type="text/html" />
+    <id>[% entry.entry_id %]</id>
+    <updated>[% entry.entry_isotime %]</updated>
+    [% IF entry.entry_summary %]
+    <summary>[% entry.entry_summary %]</summary>
+    [% END %]
+    [% IF entry.entry_tags %]
+      [% FOREACH tag IN entry.entry_tags %]
+    <category term="[% tag.tag %]" />
+      [% END %]
+    [% END %]
     <content type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        <tmpl_var entry_text>
+        [% entry.entry_text %]
       </div>
     </content>
   </entry>
-  </tmpl_loop>
+  [% END %]
 </feed>
