@@ -18,21 +18,21 @@
 
   [% FOREACH entry IN entries %]
   <entry>
-    <title>[% entry.entry_title %]</title>
-    <link href="[% entry.entry_url_basename %].html" rel="alternate" type="text/html" />
-    <id>[% entry.entry_id %]</id>
-    <updated>[% entry.entry_isotime %]</updated>
-    [% IF entry.entry_summary %]
-    <summary>[% entry.entry_summary %]</summary>
+    <title>[% entry.title %]</title>
+    <link href="[% entry.url_basename %].html" rel="alternate" type="text/html" />
+    <id>[% entry.id %]</id>
+    <updated>[% entry.isotime %]</updated>
+    [% IF entry.summary %]
+    <summary>[% entry.summary %]</summary>
     [% END %]
-    [% IF entry.entry_tags %]
-      [% FOREACH tag IN entry.entry_tags %]
-    <category term="[% tag.tag %]" />
+    [% IF entry.tags %]
+      [% FOREACH tag IN entry.tags %]
+    <category term="[% tag.name %]" />
       [% END %]
     [% END %]
     <content type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        [% entry.entry_text %]
+        [% entry.text %]
       </div>
     </content>
   </entry>

@@ -245,17 +245,17 @@ sub render_feed {
         my $basename = "$entry->{meta}->{dirname}$entry->{meta}->{filename}";
 
         my %entry_params = (
-            entry_path_basename => abs2rel($basename, $params{feed_dirname}),
-            entry_url_basename => "$web_url_root$basename",
-            entry_isotime => time2rfc3339(localtime $entry->{meta}{mtime}),
-            entry_isodate => strftime('%F', localtime $entry->{meta}{mtime}),
-            entry_title => $entry->{meta}->{title},
-            entry_id => "urn:uuid:$entry->{meta}->{uuid}",
-            entry_tags => [ map { {
-                tag_path_basename => abs2rel("$params{feed_root}/tags/$_", $params{feed_dirname}),
-                tag => $_,
+            path_basename => abs2rel($basename, $params{feed_dirname}),
+            url_basename => "$web_url_root$basename",
+            isotime => time2rfc3339(localtime $entry->{meta}{mtime}),
+            isodate => strftime('%F', localtime $entry->{meta}{mtime}),
+            title => $entry->{meta}->{title},
+            id => "urn:uuid:$entry->{meta}->{uuid}",
+            tags => [ map { {
+                path_basename => abs2rel("$params{feed_root}/tags/$_", $params{feed_dirname}),
+                name => $_,
             } } split ' ', $entry->{meta}->{tags} ],
-            entry_text => $entry->{html},
+            text => $entry->{html},
         );
 
         push @entry_params, \%entry_params;

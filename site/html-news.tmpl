@@ -2,10 +2,10 @@
 [% FOREACH news IN news_entries %]
   <div class="news-entry">
     <div class="news-title">
-      <strong>[% news.news_title %]</strong>
+      <strong>[% news.title %]</strong>
     </div>
     <div class="news-body">
-      [% news.news_body %]
+      [% news.text %]
     </div>
   </div>
 [% END %]

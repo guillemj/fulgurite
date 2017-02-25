@@ -48,8 +48,8 @@ while (<$infile>) {
 	    $news = {};
 	}
 	$entry = 1;
-	$news->{news_title} = $_;
-	$news->{news_body} = '';
+	$news->{title} = $_;
+	$news->{text} = '';
 	next;
     }
 
@@ -57,12 +57,12 @@ while (<$infile>) {
     s/^\t/ /;
 
     if (/\.$/) {
-	$news->{news_body} .= $_;
-	$news->{news_body} .= '<br />';
+	$news->{text} .= $_;
+	$news->{text} .= '<br />';
 	next;
     }
 
-    $news->{news_body} .= $_;
+    $news->{text} .= $_;
 }
 
 close $infile;
