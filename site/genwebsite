@@ -124,6 +124,7 @@ sub parse_mdwn {
         }
     }
 
+    $meta{title} =~ s/\\\*/*/g;
     if ($meta{date} and $meta{date} ne '%UNPUBLISHED%') {
         my $t;
 
