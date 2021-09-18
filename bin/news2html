@@ -19,6 +19,8 @@ use Template;
 
 my $filename = $ARGV[0];
 
+my $tmpldir = 'site/tmpl';
+
 $, = ' ';		# set output field separator
 $\ = "\n";		# set output record separator
 
@@ -67,7 +69,7 @@ while (<$infile>) {
 
 close $infile;
 
-my $tmplfile = 'site/html-news.tmpl';
+my $tmplfile = "$tmpldir/html-news.tmpl";
 my %tmplopts = (
     INTERPOLATE => 1,
     INCLUDE_PATH => 'site:.',

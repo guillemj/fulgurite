@@ -39,6 +39,8 @@ my %langs = (
 
 # Configurable settings.
 
+my $tmpldir = 'site/tmpl';
+
 my $conf = Config::Tiny->read('.website.conf', 'utf8');
 $conf->{keywords} //= {};
 
@@ -279,7 +281,7 @@ sub render_chan {
         feed_id => "urn:uuid:$mdwn->{meta}->{uuid}",
         feed_title => $mdwn->{meta}->{feed_title},
     );
-    my $atom = render_feed(\%atom_params, $mdwn_feed, 'site/atom-feed.tmpl');
+    my $atom = render_feed(\%atom_params, $mdwn_feed, "$tmpldir/atom-feed.tmpl");
     dump_file("$basename.atom", $atom);
 
     $mdwn->{meta}->{home} = abs2rel(".", $basepath);
@@ -295,7 +297,7 @@ sub render_chan {
         web_home => $mdwn->{meta}->{home},
         web_navbar => $mdwn->{meta}->{navbar},
     );
-    my $html = render_feed(\%html_params, $mdwn_feed, 'site/html-feed.tmpl');
+    my $html = render_feed(\%html_params, $mdwn_feed, "$tmpldir/html-feed.tmpl");
     dump_file("$basename.html", $html);
 }
 
@@ -303,7 +305,7 @@ sub render_chan {
 
 my %options = (
     'render-mdwn' => 1,
-    'template' => 'site/html-page.tmpl',
+    'template' => "$tmpldir/html-page.tmpl",
     'mode' => 'page',
 );;
 my @options_spec = (
