@@ -191,6 +191,7 @@ sub render_tmpl {
         author_mail => $author_mail,
         author_copyright => $author_copyright,
         author => $conf->{author},
+        image => $conf->{image},
         web_gen_program => $PROGRAM,
         web_gen_version => $VERSION,
         web_gen_isotime => $web_gen_isotime,

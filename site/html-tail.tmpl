@@ -14,6 +14,13 @@
     <div class="page-copyright">
       Copyright © [% author.copyright %] [% author.name %]
     </div>
+    [% IF image %]
+    <div class="image-copyright">
+      Copyright © [% image.author_copyright %] [% image.author_name %];
+      <a href="[% image.license_link %]">[% image.license_name %]</a>;
+      <a href="[% image.original_link %]">orginal image</a>
+    </div>
+    [% END %]
   </div>
 </body>
 </html>
