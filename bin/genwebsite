@@ -231,6 +231,7 @@ sub render_page {
         web_title => $mdwn->{meta}->{title},
         web_home => $mdwn->{meta}->{home},
         web_navbar => $mdwn->{meta}->{navbar},
+        web_headmeta => $mdwn->{meta}->{headmeta},
         web_content => $mdwn->{html},
         webid => $mdwn->{meta}->{webid},
     );
