@@ -101,6 +101,7 @@ sub parse_mdwn {
     my $text = '';
 
     my $inmetadata = 1;
+    my $namespace;
     my $key = '';
     foreach my $line (split /\n/, $data) {
         if ($line =~ /^\s*$/) {
@@ -108,9 +109,15 @@ sub parse_mdwn {
         }
 
         if ($inmetadata and $line =~ /^([a-zA-Z0-9][0-9a-zA-Z _-]+?):\s*(.*)$/) {
+            $namespace = undef;
             $key = lc $1;
             $key =~ s/  / /g;
             $meta{$key} = defined $2 ? $2 : '';
+        } elsif ($inmetadata and $line =~ /^([a-zA-Z0-9][a-zA-Z0-9 _-]*)\.([0-9a-zA-Z _-]+?):\s*(.*)$/) {
+            $namespace = lc $1;
+            $key = $2;
+            $key =~ s/  / /g;
+            $meta{$namespace}{$key} = defined $3 ? $3 : '';
         } elsif ($inmetadata) {
             if ($key eq '') {
                 $inmetadata = 0;
@@ -119,7 +126,11 @@ sub parse_mdwn {
             }
 
             if ($line =~ /^\s+(.+)$/) {
-                $meta{$key} .= "\n$1";
+                if (defined $namespace) {
+                    $meta{$namespace}{$key} .= "\n$1";
+                } else {
+                    $meta{$key} .= "\n$1";
+                }
             }
         } else {
             $text .= "$line\n";
