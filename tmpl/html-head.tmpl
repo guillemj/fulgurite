@@ -10,6 +10,9 @@
   [% IF web_headmeta %][% web_headmeta %][% END %]
   <link rel="author" href="mailto:[% author.mail %]" />
   <link rel="home" href="[% web_home %]" title="Home" />
+  [% FOREACH webme IN webme.pairs %]
+  <link rel="me" href="[% webme.value %]" title="[% webme.key %]" />
+  [% END %]
   <link rel="stylesheet" type="text/css" href="[% web_stylesheet %]" />
   [% IF web_stylesheet_local %]
   <link rel="stylesheet" type="text/css" href="[% web_stylesheet_local %]" />

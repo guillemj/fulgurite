@@ -245,6 +245,7 @@ sub render_page {
         web_headmeta => $mdwn->{meta}->{headmeta},
         web_content => $mdwn->{html},
         webid => $mdwn->{meta}->{webid},
+        webme => $mdwn->{meta}->{webme},
     );
 
     return render_tmpl($tmplfile, \%params);
